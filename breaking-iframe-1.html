@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking Iframe 1</title>
+    <style>
+        body {
+            margin: 15px;
+            font-family: monospace;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            font-size: 12px;
+        }
+        .element-number {
+            background: #333;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 2px;
+        }
+        input, select, button {
+            margin: 5px;
+            padding: 5px;
+            font-family: monospace;
+        }
+        button {
+            background: #00b894;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h3><span class="element-number">3</span> SEPARATE DOCUMENT #1</h3>
+    <p>This is a separate HTML file with its own document context.</p>
+    <p><strong>Stagehand Problem:</strong> <code>window.getScrollableElementXpaths</code> is NOT injected here!</p>
+    
+    <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 5px; margin: 10px 0;">
+        <label for="input3">Text Input:</label><br/>
+        <input type="text" id="input3" value="Element #3 - Missing in Stagehand" style="width: 200px;"/>
+        
+        <br/><br/>
+        
+        <label for="select5">Dropdown:</label><br/>
+        <select id="select5">
+            <option>Element #5-A (Missing)</option>
+            <option selected>Element #5-B (Missing)</option>
+            <option>Element #5-C (Missing)</option>
+        </select>
+        
+        <br/><br/>
+        
+        <button id="button4" onclick="alert('Button #4 clicked!')">
+            Element #4 - Action Button (Missing in Stagehand)
+        </button>
+    </div>
+    
+    <p style="font-size: 10px; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 3px;">
+        <strong>Expected:</strong> Browser-use finds all 3 elements, Stagehand finds 0
+    </p>
+</body>
+</html> 

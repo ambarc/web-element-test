@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stagehand Breaking Test - Separate Document Contexts</title>
+    <style>
+        body {
+            margin: 20px;
+            font-family: monospace;
+            background-color: #f0f0f0;
+            font-size: 14px;
+        }
+        
+        .test-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .test-box {
+            border: 3px solid #333;
+            padding: 15px;
+            background-color: white;
+            min-height: 300px;
+        }
+        
+        .box-header {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px;
+            margin: -15px -15px 15px -15px;
+            font-weight: bold;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 250px;
+            border: 2px solid #666;
+        }
+        
+        .element-number {
+            background: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 2px;
+        }
+
+        .warning-box {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1><span class="element-number">1</span> Stagehand Breaking Test - Separate Document Contexts</h1>
+    
+    <div class="warning-box">
+        <strong>⚠️ BREAKING PATTERN:</strong> These iframes use <code>src</code> attributes (separate documents) 
+        instead of <code>srcdoc</code> (inherited context). This breaks Stagehand's script injection!
+    </div>
+    
+    <div class="test-container">
+        
+        <!-- IFRAME with separate document - BREAKS Stagehand -->
+        <div class="test-box">
+            <div class="box-header"><span class="element-number">2</span> IFRAME-1: Separate Document (BREAKS Stagehand)</div>
+            <p><strong>Expected Elements:</strong> Input field (#3), Button (#4), Select (#5)</p>
+            <iframe src="breaking-iframe-1.html"></iframe>
+        </div>
+        
+        <!-- IFRAME with separate document - BREAKS Stagehand -->
+        <div class="test-box">
+            <div class="box-header"><span class="element-number">6</span> IFRAME-2: Another Separate Document (BREAKS Stagehand)</div>  
+            <p><strong>Expected Elements:</strong> Search input (#7), Submit button (#8), Checkbox (#9)</p>
+            <iframe src="breaking-iframe-2.html"></iframe>
+        </div>
+        
+        <!-- IFRAME with separate document - BREAKS Stagehand -->
+        <div class="test-box">
+            <div class="box-header"><span class="element-number">10</span> IFRAME-3: Form Elements Document (BREAKS Stagehand)</div>
+            <p><strong>Expected Elements:</strong> Name input (#11), Email input (#12), Textarea (#13), Send button (#14)</p>
+            <iframe src="breaking-iframe-3.html"></iframe>
+        </div>
+        
+        <!-- Working srcdoc for comparison -->
+        <div class="test-box">
+            <div class="box-header" style="background-color: #27ae60;"><span class="element-number">15</span> IFRAME-4: Working srcdoc (Stagehand WORKS)</div>
+            <p><strong>Expected Elements:</strong> Working input (#16), Working button (#17)</p>
+            <iframe srcdoc='
+                <html>
+                <body style="margin:20px; background:#e8f8f8; font-family:monospace;">
+                    <div style="background:#27ae60; color:white; padding:20px; text-align:center;">
+                        <h2><span style="background:#333; padding:4px 8px; border-radius:3px;">16</span> Working srcdoc Content</h2>
+                        <p>This iframe uses srcdoc (inherited context) - Stagehand WORKS here!</p>
+                        <input type="text" value="Working Input #16" style="margin:5px; padding:5px;"/>
+                        <br/>
+                        <button style="background:#1e8449; color:white; padding:8px; border:none; margin:5px;">Working Button #17</button>
+                    </div>
+                </body>
+                </html>
+            '></iframe>
+        </div>
+        
+    </div>
+    
+    <!-- Test Results Explanation -->
+    <div style="background:#2d3436; color:white; padding:20px; margin:30px 0;">
+        <h2><span class="element-number">18</span> EXPECTED TEST RESULTS</h2>
+        
+        <div style="background:#e74c3c; padding:10px; margin:10px 0; border-radius:5px;">
+            <strong>🚫 STAGEHAND (BROKEN):</strong> Should find ~1-2 elements (only from main page + working srcdoc)
+            <br/>Missing: Elements #3,4,5,7,8,9,11,12,13,14 (from separate documents)
+        </div>
+        
+        <p><strong>Root Cause:</strong> Stagehand's <code>window.getScrollableElementXpaths()</code> function 
+        is not injected into separate document contexts (src iframes), causing script injection failure 
+        at line 1164 in a11y/utils.ts during scrollable element detection.</p>
+    </div>
+    
+</body>
+</html> 

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking Iframe 3</title>
+    <style>
+        body {
+            margin: 15px;
+            font-family: monospace;
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            font-size: 12px;
+        }
+        .element-number {
+            background: #333;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 2px;
+        }
+        input, textarea, button {
+            margin: 5px;
+            padding: 5px;
+            font-family: monospace;
+        }
+        button {
+            background: #e17055;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .contact-form {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h3><span class="element-number">11</span> SEPARATE DOCUMENT #3</h3>
+    <p>Third separate HTML file - contact form example.</p>
+    <p><strong>Script Injection Fails:</strong> Each separate document needs individual injection!</p>
+    
+    <div class="contact-form">
+        <label for="name11">Full Name:</label><br/>
+        <input type="text" id="name11" value="Element #11 - Name Field" style="width: 180px;"/>
+        
+        <br/><br/>
+        
+        <label for="email12">Email Address:</label><br/>
+        <input type="email" id="email12" value="Element #12 - Email Field" style="width: 180px;"/>
+        
+        <br/><br/>
+        
+        <label for="message13">Message:</label><br/>
+        <textarea id="message13" style="width: 180px; height: 50px;" placeholder="Element #13 - Textarea">Your message here...</textarea>
+        
+        <br/><br/>
+        
+        <button id="send14" onclick="alert('Form submitted!')">
+            Element #14 - Send Message (Missing)
+        </button>
+    </div>
+    
+    <p style="font-size: 10px; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 3px;">
+        <strong>Expected:</strong> Browser-use finds 4 elements (#11,12,13,14), Stagehand finds 0
+    </p>
+</body>
+</html> 
