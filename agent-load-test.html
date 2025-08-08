@@ -39,7 +39,7 @@
             background: white;
             border: 1px solid #dee2e6;
             border-radius: 4px;
-            padding: 8px;
+            padding: 0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
@@ -47,10 +47,25 @@
             background: #495057;
             color: white;
             padding: 6px 8px;
-            margin: -8px -8px 8px -8px;
+            margin: 0;
             font-weight: bold;
             font-size: 10px;
             border-radius: 3px 3px 0 0;
+        }
+        
+        iframe {
+            width: 100%;
+            border: none;
+            display: block;
+            height: 280px;
+        }
+        
+        .tall-iframe {
+            height: 380px;
+        }
+        
+        .nested-iframe {
+            height: 320px;
         }
         
         .form-section {
@@ -181,127 +196,191 @@
         <!-- Form 1: Chief Complaint -->
         <div class="form-container">
             <div class="form-header">CHIEF COMPLAINT & HPI</div>
-            <form>
-                <div class="form-section">
-                    <input type="text" placeholder="Primary complaint">
-                    <div class="input-row">
-                        <select>
-                            <option value="">Onset</option>
-                            <option>Sudden</option>
-                            <option>Gradual</option>
-                            <option>Progressive</option>
-                        </select>
-                        <input type="text" placeholder="Duration">
-                    </div>
-                    <div class="input-row-3">
-                        <input type="number" placeholder="Pain scale 1-10" min="1" max="10">
-                        <select>
-                            <option value="">Quality</option>
-                            <option>Sharp</option>
-                            <option>Dull</option>
-                            <option>Crushing</option>
-                            <option>Burning</option>
-                            <option>Throbbing</option>
-                        </select>
-                        <select>
-                            <option value="">Location</option>
-                            <option>Chest</option>
-                            <option>Abdomen</option>
-                            <option>Head</option>
-                            <option>Back</option>
-                            <option>Extremities</option>
-                        </select>
-                    </div>
-                    <textarea placeholder="History of present illness"></textarea>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Radiating pain</label>
-                        <label><input type="checkbox"> Associated nausea</label>
-                        <label><input type="checkbox"> Shortness of breath</label>
-                        <label><input type="checkbox"> Diaphoresis</label>
-                    </div>
-                </div>
-                                 <button type="button" onclick="return false;">Document Chief Complaint</button>
-            </form>
+            <iframe srcdoc='
+                <html><head><style>
+                    body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; font-size: 11px; line-height: 1.2; }
+                    .form-section { margin-bottom: 8px; }
+                    .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
+                    input, select, textarea { width: 100%; padding: 3px; border: 1px solid #ced4da; border-radius: 2px; font-size: 10px; margin-bottom: 3px; box-sizing: border-box; }
+                    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+                    .input-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; margin-bottom: 4px; }
+                    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    label { font-size: 9px; display: flex; align-items: center; gap: 2px; }
+                    textarea { height: 40px; resize: vertical; }
+                    button { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 3px; font-size: 10px; cursor: pointer; width: 100%; margin-top: 4px; }
+                    button:active { background: #0056b3; transform: translateY(1px); }
+                    button:hover { background: #0056b3; }
+                </style></head><body>
+                    <form style="background:white; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
+                        <div class="form-section">
+                            <input type="text" placeholder="Primary complaint">
+                            <div class="input-row">
+                                <select>
+                                    <option value="">Onset</option>
+                                    <option>Sudden</option>
+                                    <option>Gradual</option>
+                                    <option>Progressive</option>
+                                </select>
+                                <input type="text" placeholder="Duration">
+                            </div>
+                            <div class="input-row-3">
+                                <input type="number" placeholder="Pain scale 1-10" min="1" max="10">
+                                <select>
+                                    <option value="">Quality</option>
+                                    <option>Sharp</option>
+                                    <option>Dull</option>
+                                    <option>Crushing</option>
+                                    <option>Burning</option>
+                                    <option>Throbbing</option>
+                                </select>
+                                <select>
+                                    <option value="">Location</option>
+                                    <option>Chest</option>
+                                    <option>Abdomen</option>
+                                    <option>Head</option>
+                                    <option>Back</option>
+                                    <option>Extremities</option>
+                                </select>
+                            </div>
+                            <textarea placeholder="History of present illness"></textarea>
+                            <div class="checkbox-grid">
+                                <label><input type="checkbox"> Radiating pain</label>
+                                <label><input type="checkbox"> Associated nausea</label>
+                                <label><input type="checkbox"> Shortness of breath</label>
+                                <label><input type="checkbox"> Diaphoresis</label>
+                            </div>
+                        </div>
+                        <button type="button" onclick="return false;">Document Chief Complaint</button>
+                    </form>
+                </body></html>
+            '></iframe>
         </div>
         
-        <!-- Form 2: Vital Signs -->
+                <!-- Form 2: Vital Signs - With Nested Monitor -->
         <div class="form-container vital-signs">
             <div class="form-header">VITAL SIGNS</div>
-            <form>
-                <div class="section-title">Primary Vitals</div>
-                <div class="input-row">
-                    <input type="number" placeholder="Systolic BP">
-                    <input type="number" placeholder="Diastolic BP">
-                </div>
-                <div class="input-row-3">
-                    <input type="number" placeholder="Heart Rate">
-                    <input type="number" placeholder="Resp Rate">
-                    <input type="number" step="0.1" placeholder="Temperature °F">
-                </div>
-                <div class="input-row">
-                    <input type="number" placeholder="O2 Saturation %">
-                    <select>
-                        <option value="">O2 Delivery</option>
-                        <option>Room Air</option>
-                        <option>2L Nasal Cannula</option>
-                        <option>4L Nasal Cannula</option>
-                        <option>Non-rebreather</option>
-                        <option>BiPAP</option>
-                    </select>
-                </div>
-                <div class="section-title">Additional Measurements</div>
-                <div class="input-row">
-                    <input type="number" placeholder="Weight (lbs)">
-                    <input type="number" placeholder="Height (inches)">
-                </div>
-                <div class="input-row">
-                    <input type="number" step="0.1" placeholder="BMI">
-                    <select>
-                        <option value="">Pain Scale</option>
-                        <option>0 - No pain</option>
-                        <option>1-3 - Mild</option>
-                        <option>4-6 - Moderate</option>
-                        <option>7-10 - Severe</option>
-                    </select>
-                </div>
-                                 <button type="button" onclick="return false;" class="success">Record Vital Signs</button>
-             </form>
-         </div>
+            <iframe class="nested-iframe" srcdoc='
+                <html><head><style>
+                    body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #e3f2fd; font-size: 11px; line-height: 1.2; }
+                    .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
+                    input, select, textarea { width: 100%; padding: 3px; border: 1px solid #ced4da; border-radius: 2px; font-size: 10px; margin-bottom: 3px; box-sizing: border-box; }
+                    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+                    .input-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; margin-bottom: 4px; }
+                    button { background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 3px; font-size: 10px; cursor: pointer; width: 100%; margin-top: 4px; }
+                    button:active { background: #1e7e34; transform: translateY(1px); }
+                    button:hover { background: #1e7e34; }
+                </style></head><body>
+                    <form style="background:white; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
+                        <div class="section-title">Primary Vitals</div>
+                        <div class="input-row">
+                            <input type="number" placeholder="Systolic BP">
+                            <input type="number" placeholder="Diastolic BP">
+                        </div>
+                        <div class="input-row-3">
+                            <input type="number" placeholder="Heart Rate">
+                            <input type="number" placeholder="Resp Rate">
+                            <input type="number" step="0.1" placeholder="Temperature °F">
+                        </div>
+                        <div class="input-row">
+                            <input type="number" placeholder="O2 Saturation %">
+                            <select>
+                                <option value="">O2 Delivery</option>
+                                <option>Room Air</option>
+                                <option>2L Nasal Cannula</option>
+                                <option>4L Nasal Cannula</option>
+                                <option>Non-rebreather</option>
+                                <option>BiPAP</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Nested Vital Signs Monitor -->
+                        <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
+                            <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Live Monitor</div>
+                            <iframe height="80" style="width:100%; border:1px solid #999;" srcdoc="
+                                <html><head><style>
+                                    body { margin:4px; font-family:Arial; background:#fff8dc; font-size:9px; }
+                                    .monitor-row { display:flex; justify-content:space-between; margin:2px 0; }
+                                    .alert { background:#ffebee; color:#d32f2f; padding:2px 4px; }
+                                </style></head><body>
+                                    <div class=&#39;monitor-row&#39;><span>HR:</span><span>-- bpm</span></div>
+                                    <div class=&#39;monitor-row&#39;><span>BP:</span><span>--/-- mmHg</span></div>
+                                    <div class=&#39;monitor-row&#39;><span>O2:</span><span>-- %</span></div>
+                                    <div class=&#39;alert&#39; style=&#39;text-align:center; margin-top:4px;&#39;>Connect Patient Monitor</div>
+                                </body></html>
+                            "></iframe>
+                        </div>
+                        
+                        <div class="section-title">Additional Measurements</div>
+                        <div class="input-row">
+                            <input type="number" placeholder="Weight (lbs)">
+                            <input type="number" placeholder="Height (inches)">
+                        </div>
+                        <div class="input-row">
+                            <input type="number" step="0.1" placeholder="BMI">
+                            <select>
+                                <option value="">Pain Scale</option>
+                                <option>0 - No pain</option>
+                                <option>1-3 - Mild</option>
+                                <option>4-6 - Moderate</option>
+                                <option>7-10 - Severe</option>
+                            </select>
+                        </div>
+                        <button type="button" onclick="return false;">Record Vital Signs</button>
+                    </form>
+                </body></html>
+            '></iframe>
+        </div>
          
-         <!-- Form 3: Cardiovascular Assessment -->
-         <div class="form-container assessment">
-             <div class="form-header">CARDIOVASCULAR EXAM</div>
-             <form>
-                 <div class="section-title">Heart Rate & Rhythm</div>
-                 <div class="input-row">
-                     <input type="number" placeholder="Heart Rate (bpm)">
-                     <select>
-                         <option value="">Rhythm</option>
-                         <option>Regular</option>
-                         <option>Irregular</option>
-                         <option>Tachycardic</option>
-                         <option>Bradycardic</option>
-                     </select>
-                 </div>
-                 <div class="section-title">Heart Sounds</div>
-                 <div class="checkbox-grid-3">
-                     <label><input type="checkbox"> S1 Normal</label>
-                     <label><input type="checkbox"> S2 Normal</label>
-                     <label><input type="checkbox"> S3 Gallop</label>
-                     <label><input type="checkbox"> S4 Gallop</label>
-                     <label><input type="checkbox"> Murmur</label>
-                     <label><input type="checkbox"> Rub</label>
-                 </div>
-                 <div class="section-title">Peripheral Assessment</div>
-                 <div class="checkbox-grid">
-                     <label><input type="checkbox"> Pulses 2+ bilateral</label>
-                     <label><input type="checkbox"> Peripheral edema</label>
-                     <label><input type="checkbox"> JVD present</label>
-                     <label><input type="checkbox"> Cyanosis</label>
-                 </div>
-                 <textarea placeholder="Additional cardiovascular findings"></textarea>
-                 <button type="button" onclick="return false;">Save CV Assessment</button>
-            </form>
+                 <!-- Form 3: Cardiovascular Assessment -->
+        <div class="form-container assessment">
+            <div class="form-header">CARDIOVASCULAR EXAM</div>
+            <iframe srcdoc='
+                <html><head><style>
+                    body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #fff3e0; font-size: 11px; line-height: 1.2; }
+                    .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
+                    input, select, textarea { width: 100%; padding: 3px; border: 1px solid #ced4da; border-radius: 2px; font-size: 10px; margin-bottom: 3px; box-sizing: border-box; }
+                    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+                    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    .checkbox-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    label { font-size: 9px; display: flex; align-items: center; gap: 2px; }
+                    textarea { height: 40px; resize: vertical; }
+                    button { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 3px; font-size: 10px; cursor: pointer; width: 100%; margin-top: 4px; }
+                    button:active { background: #0056b3; transform: translateY(1px); }
+                    button:hover { background: #0056b3; }
+                </style></head><body>
+                    <form style="background:white; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
+                        <div class="section-title">Heart Rate & Rhythm</div>
+                        <div class="input-row">
+                            <input type="number" placeholder="Heart Rate (bpm)">
+                            <select>
+                                <option value="">Rhythm</option>
+                                <option>Regular</option>
+                                <option>Irregular</option>
+                                <option>Tachycardic</option>
+                                <option>Bradycardic</option>
+                            </select>
+                        </div>
+                        <div class="section-title">Heart Sounds</div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> S1 Normal</label>
+                            <label><input type="checkbox"> S2 Normal</label>
+                            <label><input type="checkbox"> S3 Gallop</label>
+                            <label><input type="checkbox"> S4 Gallop</label>
+                            <label><input type="checkbox"> Murmur</label>
+                            <label><input type="checkbox"> Rub</label>
+                        </div>
+                        <div class="section-title">Peripheral Assessment</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Pulses 2+ bilateral</label>
+                            <label><input type="checkbox"> Peripheral edema</label>
+                            <label><input type="checkbox"> JVD present</label>
+                            <label><input type="checkbox"> Cyanosis</label>
+                        </div>
+                        <textarea placeholder="Additional cardiovascular findings"></textarea>
+                        <button type="button" onclick="return false;">Save CV Assessment</button>
+                    </form>
+                </body></html>
+            '></iframe>
         </div>
         
     </div>
@@ -309,114 +388,159 @@
     <!-- Row 2: System Reviews -->
     <div class="form-grid">
         
-        <!-- Form 4: Respiratory Assessment -->
+                <!-- Form 4: Respiratory Assessment -->
         <div class="form-container assessment">
             <div class="form-header">PULMONARY ASSESSMENT</div>
-            <form>
-                <div class="section-title">Respiratory Effort</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Dyspnea at rest</label>
-                    <label><input type="checkbox"> Dyspnea on exertion</label>
-                    <label><input type="checkbox"> Use of accessory muscles</label>
-                    <label><input type="checkbox"> Retractions</label>
-                </div>
-                <div class="section-title">Lung Sounds</div>
-                <div class="checkbox-grid-3">
-                    <label><input type="checkbox"> Clear bilateral</label>
-                    <label><input type="checkbox"> Wheezes</label>
-                    <label><input type="checkbox"> Rales/Crackles</label>
-                    <label><input type="checkbox"> Rhonchi</label>
-                    <label><input type="checkbox"> Diminished left</label>
-                    <label><input type="checkbox"> Diminished right</label>
-                </div>
-                <div class="section-title">Other Findings</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Productive cough</label>
-                    <label><input type="checkbox"> Dry cough</label>
-                    <label><input type="checkbox"> Chest tightness</label>
-                    <label><input type="checkbox"> Pleuritic pain</label>
-                </div>
-                                 <textarea placeholder="Detailed pulmonary examination notes"></textarea>
-                 <button type="button" onclick="return false;">Document Respiratory</button>
-             </form>
-         </div>
+            <iframe srcdoc='
+                <html><head><style>
+                    body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #fff3e0; font-size: 11px; line-height: 1.2; }
+                    .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
+                    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    .checkbox-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    label { font-size: 9px; display: flex; align-items: center; gap: 2px; }
+                    textarea { width: 100%; height: 40px; padding: 3px; border: 1px solid #ced4da; border-radius: 2px; font-size: 10px; margin-bottom: 3px; box-sizing: border-box; resize: vertical; }
+                    button { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 3px; font-size: 10px; cursor: pointer; width: 100%; margin-top: 4px; }
+                    button:active { background: #0056b3; transform: translateY(1px); }
+                    button:hover { background: #0056b3; }
+                </style></head><body>
+                    <form style="background:white; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
+                        <div class="section-title">Respiratory Effort</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Dyspnea at rest</label>
+                            <label><input type="checkbox"> Dyspnea on exertion</label>
+                            <label><input type="checkbox"> Use of accessory muscles</label>
+                            <label><input type="checkbox"> Retractions</label>
+                        </div>
+                        <div class="section-title">Lung Sounds</div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> Clear bilateral</label>
+                            <label><input type="checkbox"> Wheezes</label>
+                            <label><input type="checkbox"> Rales/Crackles</label>
+                            <label><input type="checkbox"> Rhonchi</label>
+                            <label><input type="checkbox"> Diminished left</label>
+                            <label><input type="checkbox"> Diminished right</label>
+                        </div>
+                        <div class="section-title">Other Findings</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Productive cough</label>
+                            <label><input type="checkbox"> Dry cough</label>
+                            <label><input type="checkbox"> Chest tightness</label>
+                            <label><input type="checkbox"> Pleuritic pain</label>
+                        </div>
+                        <textarea placeholder="Detailed pulmonary examination notes"></textarea>
+                        <button type="button" onclick="return false;">Document Respiratory</button>
+                    </form>
+                </body></html>
+            '></iframe>
+        </div>
          
-         <!-- Form 5: Neurological Screen -->
-         <div class="form-container assessment">
-             <div class="form-header">NEUROLOGICAL ASSESSMENT</div>
-             <form>
-                 <div class="section-title">Mental Status</div>
-                 <div class="input-row">
-                     <select>
-                         <option value="">Glasgow Coma Scale</option>
-                         <option>15 - Normal</option>
-                         <option>14 - Mild impairment</option>
-                         <option>13 - Mild impairment</option>
-                         <option>12 - Moderate impairment</option>
-                         <option>11 - Moderate impairment</option>
-                         <option>10 - Moderate impairment</option>
-                         <option>9 - Severe impairment</option>
-                         <option>8 - Severe impairment</option>
-                     </select>
-                     <select>
-                         <option value="">Orientation</option>
-                         <option>Alert & Oriented x4</option>
-                         <option>Alert & Oriented x3</option>
-                         <option>Alert & Oriented x2</option>
-                         <option>Alert & Oriented x1</option>
-                         <option>Confused</option>
-                         <option>Lethargic</option>
-                     </select>
-                 </div>
-                 <div class="section-title">Neurological Exam</div>
-                 <div class="checkbox-grid">
-                     <label><input type="checkbox"> PERRLA</label>
-                     <label><input type="checkbox"> Pupils dilated</label>
-                     <label><input type="checkbox"> Pupils constricted</label>
-                     <label><input type="checkbox"> Unequal pupils</label>
-                 </div>
-                 <div class="checkbox-grid-3">
-                     <label><input type="checkbox"> Strength 5/5 bilateral</label>
-                     <label><input type="checkbox"> Focal weakness</label>
-                     <label><input type="checkbox"> Sensation intact</label>
-                     <label><input type="checkbox"> Numbness/tingling</label>
-                     <label><input type="checkbox"> Reflexes 2+ symmetric</label>
-                     <label><input type="checkbox"> Hyperreflexia</label>
-                 </div>
-                 <textarea placeholder="Neurological examination details"></textarea>
-                 <button type="button" onclick="return false;">Save Neuro Exam</button>
-             </form>
-         </div>
+                 <!-- Form 5: Neurological Screen -->
+        <div class="form-container assessment">
+            <div class="form-header">NEUROLOGICAL ASSESSMENT</div>
+            <iframe srcdoc='
+                <html><head><style>
+                    body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #fff3e0; font-size: 11px; line-height: 1.2; }
+                    .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
+                    input, select, textarea { width: 100%; padding: 3px; border: 1px solid #ced4da; border-radius: 2px; font-size: 10px; margin-bottom: 3px; box-sizing: border-box; }
+                    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+                    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    .checkbox-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    label { font-size: 9px; display: flex; align-items: center; gap: 2px; }
+                    textarea { height: 40px; resize: vertical; }
+                    button { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 3px; font-size: 10px; cursor: pointer; width: 100%; margin-top: 4px; }
+                    button:active { background: #0056b3; transform: translateY(1px); }
+                    button:hover { background: #0056b3; }
+                </style></head><body>
+                    <form style="background:white; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
+                        <div class="section-title">Mental Status</div>
+                        <div class="input-row">
+                            <select>
+                                <option value="">Glasgow Coma Scale</option>
+                                <option>15 - Normal</option>
+                                <option>14 - Mild impairment</option>
+                                <option>13 - Mild impairment</option>
+                                <option>12 - Moderate impairment</option>
+                                <option>11 - Moderate impairment</option>
+                                <option>10 - Moderate impairment</option>
+                                <option>9 - Severe impairment</option>
+                                <option>8 - Severe impairment</option>
+                            </select>
+                            <select>
+                                <option value="">Orientation</option>
+                                <option>Alert & Oriented x4</option>
+                                <option>Alert & Oriented x3</option>
+                                <option>Alert & Oriented x2</option>
+                                <option>Alert & Oriented x1</option>
+                                <option>Confused</option>
+                                <option>Lethargic</option>
+                            </select>
+                        </div>
+                        <div class="section-title">Neurological Exam</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> PERRLA</label>
+                            <label><input type="checkbox"> Pupils dilated</label>
+                            <label><input type="checkbox"> Pupils constricted</label>
+                            <label><input type="checkbox"> Unequal pupils</label>
+                        </div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> Strength 5/5 bilateral</label>
+                            <label><input type="checkbox"> Focal weakness</label>
+                            <label><input type="checkbox"> Sensation intact</label>
+                            <label><input type="checkbox"> Numbness/tingling</label>
+                            <label><input type="checkbox"> Reflexes 2+ symmetric</label>
+                            <label><input type="checkbox"> Hyperreflexia</label>
+                        </div>
+                        <textarea placeholder="Neurological examination details"></textarea>
+                        <button type="button" onclick="return false;">Save Neuro Exam</button>
+                    </form>
+                </body></html>
+            '></iframe>
+        </div>
          
-         <!-- Form 6: Gastrointestinal -->
-         <div class="form-container assessment">
-             <div class="form-header">GASTROINTESTINAL EXAM</div>
-             <form>
-                 <div class="section-title">GI Symptoms</div>
-                 <div class="checkbox-grid">
-                     <label><input type="checkbox"> Nausea</label>
-                     <label><input type="checkbox"> Vomiting</label>
-                     <label><input type="checkbox"> Diarrhea</label>
-                     <label><input type="checkbox"> Constipation</label>
-                     <label><input type="checkbox"> Abdominal pain</label>
-                     <label><input type="checkbox"> Blood in stool</label>
-                 </div>
-                 <div class="section-title">Abdominal Examination</div>
-                 <div class="checkbox-grid-3">
-                     <label><input type="checkbox"> Soft</label>
-                     <label><input type="checkbox"> Non-tender</label>
-                     <label><input type="checkbox"> Non-distended</label>
-                     <label><input type="checkbox"> Bowel sounds present</label>
-                     <label><input type="checkbox"> Rigid</label>
-                     <label><input type="checkbox"> Guarding</label>
-                     <label><input type="checkbox"> Rebound tenderness</label>
-                     <label><input type="checkbox"> Masses palpable</label>
-                     <label><input type="checkbox"> Hepatomegaly</label>
-                 </div>
-                 <input type="text" placeholder="Last bowel movement">
-                 <textarea placeholder="Abdominal examination findings"></textarea>
-                 <button type="button" onclick="return false;">Document GI Exam</button>
-            </form>
+                 <!-- Form 6: Gastrointestinal -->
+        <div class="form-container assessment">
+            <div class="form-header">GASTROINTESTINAL EXAM</div>
+            <iframe srcdoc='
+                <html><head><style>
+                    body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #fff3e0; font-size: 11px; line-height: 1.2; }
+                    .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
+                    input, select, textarea { width: 100%; padding: 3px; border: 1px solid #ced4da; border-radius: 2px; font-size: 10px; margin-bottom: 3px; box-sizing: border-box; }
+                    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    .checkbox-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    label { font-size: 9px; display: flex; align-items: center; gap: 2px; }
+                    textarea { height: 40px; resize: vertical; }
+                    button { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 3px; font-size: 10px; cursor: pointer; width: 100%; margin-top: 4px; }
+                    button:active { background: #0056b3; transform: translateY(1px); }
+                    button:hover { background: #0056b3; }
+                </style></head><body>
+                    <form style="background:white; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
+                        <div class="section-title">GI Symptoms</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Nausea</label>
+                            <label><input type="checkbox"> Vomiting</label>
+                            <label><input type="checkbox"> Diarrhea</label>
+                            <label><input type="checkbox"> Constipation</label>
+                            <label><input type="checkbox"> Abdominal pain</label>
+                            <label><input type="checkbox"> Blood in stool</label>
+                        </div>
+                        <div class="section-title">Abdominal Examination</div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> Soft</label>
+                            <label><input type="checkbox"> Non-tender</label>
+                            <label><input type="checkbox"> Non-distended</label>
+                            <label><input type="checkbox"> Bowel sounds present</label>
+                            <label><input type="checkbox"> Rigid</label>
+                            <label><input type="checkbox"> Guarding</label>
+                            <label><input type="checkbox"> Rebound tenderness</label>
+                            <label><input type="checkbox"> Masses palpable</label>
+                            <label><input type="checkbox"> Hepatomegaly</label>
+                        </div>
+                        <input type="text" placeholder="Last bowel movement">
+                        <textarea placeholder="Abdominal examination findings"></textarea>
+                        <button type="button" onclick="return false;">Document GI Exam</button>
+                    </form>
+                </body></html>
+            '></iframe>
         </div>
         
     </div>
@@ -424,103 +548,176 @@
     <!-- Row 3: Laboratory & Diagnostic Orders -->
     <div class="two-column">
         
-        <!-- Form 7: Laboratory Orders -->
+        <!-- Form 7: Laboratory Orders - With Nested Lab System -->
         <div class="form-container orders">
             <div class="form-header">LABORATORY ORDERS</div>
-            <form>
-                <div class="section-title">Complete Blood Count</div>
-                <div class="checkbox-grid-3">
-                    <label><input type="checkbox"> WBC with differential</label>
-                    <label><input type="checkbox"> Hemoglobin</label>
-                    <label><input type="checkbox"> Hematocrit</label>
-                    <label><input type="checkbox"> Platelet count</label>
-                    <label><input type="checkbox"> RBC count</label>
-                    <label><input type="checkbox"> RBC indices</label>
-                </div>
-                <div class="section-title">Basic Metabolic Panel</div>
-                <div class="checkbox-grid-3">
-                    <label><input type="checkbox"> Glucose</label>
-                    <label><input type="checkbox"> BUN</label>
-                    <label><input type="checkbox"> Creatinine</label>
-                    <label><input type="checkbox"> Sodium</label>
-                    <label><input type="checkbox"> Potassium</label>
-                    <label><input type="checkbox"> Chloride</label>
-                    <label><input type="checkbox"> CO2</label>
-                    <label><input type="checkbox"> eGFR</label>
-                    <label><input type="checkbox"> Anion gap</label>
-                </div>
-                <div class="section-title">Cardiac Markers</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Troponin I</label>
-                    <label><input type="checkbox"> CK-MB</label>
-                    <label><input type="checkbox"> BNP</label>
-                    <label><input type="checkbox"> D-Dimer</label>
-                </div>
-                <div class="section-title">Other Tests</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Lipid panel</label>
-                    <label><input type="checkbox"> Liver function tests</label>
-                    <label><input type="checkbox"> HbA1c</label>
-                    <label><input type="checkbox"> TSH</label>
-                    <label><input type="checkbox"> PT/INR</label>
-                    <label><input type="checkbox"> Urinalysis</label>
-                </div>
-                <select>
-                    <option value="">Priority Level</option>
-                    <option>STAT</option>
-                    <option>Urgent</option>
-                    <option>Routine</option>
-                    <option>Timed</option>
-                </select>
-                                 <textarea placeholder="Special instructions for laboratory"></textarea>
-                 <button type="button" onclick="return false;" class="warning">Submit Lab Orders</button>
-             </form>
-         </div>
+            <iframe class="tall-iframe" srcdoc='
+                <html><head><style>
+                    body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f3e5f5; font-size: 11px; line-height: 1.2; }
+                    .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
+                    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    .checkbox-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    label { font-size: 9px; display: flex; align-items: center; gap: 2px; }
+                    select, textarea { width: 100%; padding: 3px; border: 1px solid #ced4da; border-radius: 2px; font-size: 10px; margin-bottom: 3px; box-sizing: border-box; }
+                    textarea { height: 40px; resize: vertical; }
+                    button { background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 3px; font-size: 10px; cursor: pointer; width: 100%; margin-top: 4px; }
+                    button:active { background: #e0a800; transform: translateY(1px); }
+                    button:hover { background: #e0a800; }
+                </style></head><body>
+                    <form style="background:white; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
+                        <div class="section-title">Complete Blood Count</div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> WBC with differential</label>
+                            <label><input type="checkbox"> Hemoglobin</label>
+                            <label><input type="checkbox"> Hematocrit</label>
+                            <label><input type="checkbox"> Platelet count</label>
+                            <label><input type="checkbox"> RBC count</label>
+                            <label><input type="checkbox"> RBC indices</label>
+                        </div>
+                        
+                        <!-- Nested Lab Processing System -->
+                        <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
+                            <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Lab Processing Queue</div>
+                            <iframe height="90" style="width:100%; border:1px solid #999;" srcdoc="
+                                <html><head><style>
+                                    body { margin:4px; font-family:Arial; background:#fffacd; font-size:9px; }
+                                    .queue-item { display:flex; justify-content:space-between; margin:2px 0; padding:2px; background:white; border:1px solid #ddd; }
+                                    .status { color:#28a745; font-weight:bold; }
+                                    .pending { color:#ffc107; }
+                                </style></head><body>
+                                    <div class=&#39;queue-item&#39;><span>CBC - Patient A</span><span class=&#39;status&#39;>Complete</span></div>
+                                    <div class=&#39;queue-item&#39;><span>BMP - Patient B</span><span class=&#39;pending&#39;>Processing</span></div>
+                                    <div class=&#39;queue-item&#39;><span>Cardiac - Patient C</span><span class=&#39;pending&#39;>Pending</span></div>
+                                    
+                                    <!-- Double nested lab analyzer -->
+                                    <iframe height=&#39;25&#39; style=&#39;width:100%; border:1px solid #777; margin-top:4px;&#39; srcdoc=&#39;
+                                        <html><body style=\"margin:2px; font-size:8px; background:#e8f5e8;\">
+                                            <div style=\"text-align:center;\">Lab Analyzer Status: &#128994; Online</div>
+                                        </body></html>
+                                    &#39;></iframe>
+                                </body></html>
+                            "></iframe>
+                        </div>
+                        
+                        <div class="section-title">Basic Metabolic Panel</div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> Glucose</label>
+                            <label><input type="checkbox"> BUN</label>
+                            <label><input type="checkbox"> Creatinine</label>
+                            <label><input type="checkbox"> Sodium</label>
+                            <label><input type="checkbox"> Potassium</label>
+                            <label><input type="checkbox"> Chloride</label>
+                            <label><input type="checkbox"> CO2</label>
+                            <label><input type="checkbox"> eGFR</label>
+                            <label><input type="checkbox"> Anion gap</label>
+                        </div>
+                        <div class="section-title">Cardiac Markers</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Troponin I</label>
+                            <label><input type="checkbox"> CK-MB</label>
+                            <label><input type="checkbox"> BNP</label>
+                            <label><input type="checkbox"> D-Dimer</label>
+                        </div>
+                        <div class="section-title">Other Tests</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Lipid panel</label>
+                            <label><input type="checkbox"> Liver function tests</label>
+                            <label><input type="checkbox"> HbA1c</label>
+                            <label><input type="checkbox"> TSH</label>
+                            <label><input type="checkbox"> PT/INR</label>
+                            <label><input type="checkbox"> Urinalysis</label>
+                        </div>
+                        <select>
+                            <option value="">Priority Level</option>
+                            <option>STAT</option>
+                            <option>Urgent</option>
+                            <option>Routine</option>
+                            <option>Timed</option>
+                        </select>
+                        <textarea placeholder="Special instructions for laboratory"></textarea>
+                        <button type="button" onclick="return false;">Submit Lab Orders</button>
+                    </form>
+                </body></html>
+            '></iframe>
+        </div>
          
-         <!-- Form 8: Medication Orders -->
-         <div class="form-container orders">
-             <div class="form-header">MEDICATION ORDERS</div>
-             <form>
-                 <div class="section-title">New Prescription</div>
-                 <input type="text" placeholder="Medication name">
-                 <div class="input-row-3">
-                     <input type="text" placeholder="Strength/Dose">
-                     <select>
-                         <option value="">Route</option>
-                         <option>PO (by mouth)</option>
-                         <option>IV (intravenous)</option>
-                         <option>IM (intramuscular)</option>
-                         <option>SL (sublingual)</option>
-                         <option>Topical</option>
-                         <option>Inhaled</option>
-                         <option>PR (rectal)</option>
-                     </select>
-                     <select>
-                         <option value="">Frequency</option>
-                         <option>Once daily</option>
-                         <option>BID (twice daily)</option>
-                         <option>TID (three times daily)</option>
-                         <option>QID (four times daily)</option>
-                         <option>Q4H (every 4 hours)</option>
-                         <option>Q6H (every 6 hours)</option>
-                         <option>Q8H (every 8 hours)</option>
-                         <option>PRN (as needed)</option>
-                     </select>
-                 </div>
-                 <div class="input-row">
-                     <input type="number" placeholder="Quantity">
-                     <input type="number" placeholder="Refills">
-                 </div>
-                 <textarea placeholder="Special instructions and patient counseling"></textarea>
-                 <div class="section-title">Safety Checks</div>
-                 <div class="checkbox-grid">
-                     <label><input type="checkbox"> Allergy check completed</label>
-                     <label><input type="checkbox"> Drug interaction reviewed</label>
-                     <label><input type="checkbox"> Renal dosing considered</label>
-                     <label><input type="checkbox"> Generic substitution OK</label>
-                 </div>
-                 <button type="button" onclick="return false;" class="urgent">Send to Pharmacy</button>
-            </form>
+        <!-- Form 8: Medication Orders - With Nested Pharmacy System -->
+        <div class="form-container orders">
+            <div class="form-header">MEDICATION ORDERS</div>
+            <iframe class="tall-iframe" srcdoc='
+                <html><head><style>
+                    body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f3e5f5; font-size: 11px; line-height: 1.2; }
+                    .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
+                    input, select, textarea { width: 100%; padding: 3px; border: 1px solid #ced4da; border-radius: 2px; font-size: 10px; margin-bottom: 3px; box-sizing: border-box; }
+                    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+                    .input-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; margin-bottom: 4px; }
+                    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                    label { font-size: 9px; display: flex; align-items: center; gap: 2px; }
+                    textarea { height: 40px; resize: vertical; }
+                    button { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 3px; font-size: 10px; cursor: pointer; width: 100%; margin-top: 4px; }
+                    button:active { background: #c82333; transform: translateY(1px); }
+                    button:hover { background: #c82333; }
+                </style></head><body>
+                    <form style="background:white; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
+                        <div class="section-title">New Prescription</div>
+                        <input type="text" placeholder="Medication name">
+                        <div class="input-row-3">
+                            <input type="text" placeholder="Strength/Dose">
+                            <select>
+                                <option value="">Route</option>
+                                <option>PO (by mouth)</option>
+                                <option>IV (intravenous)</option>
+                                <option>IM (intramuscular)</option>
+                                <option>SL (sublingual)</option>
+                                <option>Topical</option>
+                                <option>Inhaled</option>
+                                <option>PR (rectal)</option>
+                            </select>
+                            <select>
+                                <option value="">Frequency</option>
+                                <option>Once daily</option>
+                                <option>BID (twice daily)</option>
+                                <option>TID (three times daily)</option>
+                                <option>QID (four times daily)</option>
+                                <option>Q4H (every 4 hours)</option>
+                                <option>Q6H (every 6 hours)</option>
+                                <option>Q8H (every 8 hours)</option>
+                                <option>PRN (as needed)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Nested Drug Interaction Checker -->
+                        <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
+                            <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Drug Interaction Alert</div>
+                            <iframe height="70" style="width:100%; border:1px solid #999;" srcdoc="
+                                <html><head><style>
+                                    body { margin:4px; font-family:Arial; background:#fff3cd; font-size:9px; }
+                                    .alert-item { margin:2px 0; padding:2px; background:#f8d7da; border:1px solid #f5c6cb; border-radius:2px; }
+                                    .safe { background:#d4edda; border-color:#c3e6cb; }
+                                </style></head><body>
+                                    <div class=&#39;alert-item safe&#39;>✓ No known allergies</div>
+                                    <div class=&#39;alert-item safe&#39;>✓ No major interactions</div>
+                                    <div class=&#39;alert-item&#39;>⚠ Monitor renal function</div>
+                                </body></html>
+                            "></iframe>
+                        </div>
+                        
+                        <div class="input-row">
+                            <input type="number" placeholder="Quantity">
+                            <input type="number" placeholder="Refills">
+                        </div>
+                        <textarea placeholder="Special instructions and patient counseling"></textarea>
+                        <div class="section-title">Safety Checks</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Allergy check completed</label>
+                            <label><input type="checkbox"> Drug interaction reviewed</label>
+                            <label><input type="checkbox"> Renal dosing considered</label>
+                            <label><input type="checkbox"> Generic substitution OK</label>
+                        </div>
+                        <button type="button" onclick="return false;">Send to Pharmacy</button>
+                    </form>
+                </body></html>
+            '></iframe>
         </div>
         
     </div>
