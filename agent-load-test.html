@@ -128,6 +128,11 @@
             margin-top: 4px;
         }
         
+        button:active {
+            background: #0056b3;
+            transform: translateY(1px);
+        }
+        
         button:hover {
             background: #0056b3;
         }
@@ -215,7 +220,7 @@
                         <label><input type="checkbox"> Diaphoresis</label>
                     </div>
                 </div>
-                <button type="submit">Document Chief Complaint</button>
+                                 <button type="button" onclick="return false;">Document Chief Complaint</button>
             </form>
         </div>
         
@@ -259,43 +264,43 @@
                         <option>7-10 - Severe</option>
                     </select>
                 </div>
-                <button type="submit" class="success">Record Vital Signs</button>
-            </form>
-        </div>
-        
-        <!-- Form 3: Cardiovascular Assessment -->
-        <div class="form-container assessment">
-            <div class="form-header">CARDIOVASCULAR EXAM</div>
-            <form>
-                <div class="section-title">Heart Rate & Rhythm</div>
-                <div class="input-row">
-                    <input type="number" placeholder="Heart Rate (bpm)">
-                    <select>
-                        <option value="">Rhythm</option>
-                        <option>Regular</option>
-                        <option>Irregular</option>
-                        <option>Tachycardic</option>
-                        <option>Bradycardic</option>
-                    </select>
-                </div>
-                <div class="section-title">Heart Sounds</div>
-                <div class="checkbox-grid-3">
-                    <label><input type="checkbox"> S1 Normal</label>
-                    <label><input type="checkbox"> S2 Normal</label>
-                    <label><input type="checkbox"> S3 Gallop</label>
-                    <label><input type="checkbox"> S4 Gallop</label>
-                    <label><input type="checkbox"> Murmur</label>
-                    <label><input type="checkbox"> Rub</label>
-                </div>
-                <div class="section-title">Peripheral Assessment</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Pulses 2+ bilateral</label>
-                    <label><input type="checkbox"> Peripheral edema</label>
-                    <label><input type="checkbox"> JVD present</label>
-                    <label><input type="checkbox"> Cyanosis</label>
-                </div>
-                <textarea placeholder="Additional cardiovascular findings"></textarea>
-                <button type="submit">Save CV Assessment</button>
+                                 <button type="button" onclick="return false;" class="success">Record Vital Signs</button>
+             </form>
+         </div>
+         
+         <!-- Form 3: Cardiovascular Assessment -->
+         <div class="form-container assessment">
+             <div class="form-header">CARDIOVASCULAR EXAM</div>
+             <form>
+                 <div class="section-title">Heart Rate & Rhythm</div>
+                 <div class="input-row">
+                     <input type="number" placeholder="Heart Rate (bpm)">
+                     <select>
+                         <option value="">Rhythm</option>
+                         <option>Regular</option>
+                         <option>Irregular</option>
+                         <option>Tachycardic</option>
+                         <option>Bradycardic</option>
+                     </select>
+                 </div>
+                 <div class="section-title">Heart Sounds</div>
+                 <div class="checkbox-grid-3">
+                     <label><input type="checkbox"> S1 Normal</label>
+                     <label><input type="checkbox"> S2 Normal</label>
+                     <label><input type="checkbox"> S3 Gallop</label>
+                     <label><input type="checkbox"> S4 Gallop</label>
+                     <label><input type="checkbox"> Murmur</label>
+                     <label><input type="checkbox"> Rub</label>
+                 </div>
+                 <div class="section-title">Peripheral Assessment</div>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> Pulses 2+ bilateral</label>
+                     <label><input type="checkbox"> Peripheral edema</label>
+                     <label><input type="checkbox"> JVD present</label>
+                     <label><input type="checkbox"> Cyanosis</label>
+                 </div>
+                 <textarea placeholder="Additional cardiovascular findings"></textarea>
+                 <button type="button" onclick="return false;">Save CV Assessment</button>
             </form>
         </div>
         
@@ -331,86 +336,86 @@
                     <label><input type="checkbox"> Chest tightness</label>
                     <label><input type="checkbox"> Pleuritic pain</label>
                 </div>
-                <textarea placeholder="Detailed pulmonary examination notes"></textarea>
-                <button type="submit">Document Respiratory</button>
-            </form>
-        </div>
-        
-        <!-- Form 5: Neurological Screen -->
-        <div class="form-container assessment">
-            <div class="form-header">NEUROLOGICAL ASSESSMENT</div>
-            <form>
-                <div class="section-title">Mental Status</div>
-                <div class="input-row">
-                    <select>
-                        <option value="">Glasgow Coma Scale</option>
-                        <option>15 - Normal</option>
-                        <option>14 - Mild impairment</option>
-                        <option>13 - Mild impairment</option>
-                        <option>12 - Moderate impairment</option>
-                        <option>11 - Moderate impairment</option>
-                        <option>10 - Moderate impairment</option>
-                        <option>9 - Severe impairment</option>
-                        <option>8 - Severe impairment</option>
-                    </select>
-                    <select>
-                        <option value="">Orientation</option>
-                        <option>Alert & Oriented x4</option>
-                        <option>Alert & Oriented x3</option>
-                        <option>Alert & Oriented x2</option>
-                        <option>Alert & Oriented x1</option>
-                        <option>Confused</option>
-                        <option>Lethargic</option>
-                    </select>
-                </div>
-                <div class="section-title">Neurological Exam</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> PERRLA</label>
-                    <label><input type="checkbox"> Pupils dilated</label>
-                    <label><input type="checkbox"> Pupils constricted</label>
-                    <label><input type="checkbox"> Unequal pupils</label>
-                </div>
-                <div class="checkbox-grid-3">
-                    <label><input type="checkbox"> Strength 5/5 bilateral</label>
-                    <label><input type="checkbox"> Focal weakness</label>
-                    <label><input type="checkbox"> Sensation intact</label>
-                    <label><input type="checkbox"> Numbness/tingling</label>
-                    <label><input type="checkbox"> Reflexes 2+ symmetric</label>
-                    <label><input type="checkbox"> Hyperreflexia</label>
-                </div>
-                <textarea placeholder="Neurological examination details"></textarea>
-                <button type="submit">Save Neuro Exam</button>
-            </form>
-        </div>
-        
-        <!-- Form 6: Gastrointestinal -->
-        <div class="form-container assessment">
-            <div class="form-header">GASTROINTESTINAL EXAM</div>
-            <form>
-                <div class="section-title">GI Symptoms</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Nausea</label>
-                    <label><input type="checkbox"> Vomiting</label>
-                    <label><input type="checkbox"> Diarrhea</label>
-                    <label><input type="checkbox"> Constipation</label>
-                    <label><input type="checkbox"> Abdominal pain</label>
-                    <label><input type="checkbox"> Blood in stool</label>
-                </div>
-                <div class="section-title">Abdominal Examination</div>
-                <div class="checkbox-grid-3">
-                    <label><input type="checkbox"> Soft</label>
-                    <label><input type="checkbox"> Non-tender</label>
-                    <label><input type="checkbox"> Non-distended</label>
-                    <label><input type="checkbox"> Bowel sounds present</label>
-                    <label><input type="checkbox"> Rigid</label>
-                    <label><input type="checkbox"> Guarding</label>
-                    <label><input type="checkbox"> Rebound tenderness</label>
-                    <label><input type="checkbox"> Masses palpable</label>
-                    <label><input type="checkbox"> Hepatomegaly</label>
-                </div>
-                <input type="text" placeholder="Last bowel movement">
-                <textarea placeholder="Abdominal examination findings"></textarea>
-                <button type="submit">Document GI Exam</button>
+                                 <textarea placeholder="Detailed pulmonary examination notes"></textarea>
+                 <button type="button" onclick="return false;">Document Respiratory</button>
+             </form>
+         </div>
+         
+         <!-- Form 5: Neurological Screen -->
+         <div class="form-container assessment">
+             <div class="form-header">NEUROLOGICAL ASSESSMENT</div>
+             <form>
+                 <div class="section-title">Mental Status</div>
+                 <div class="input-row">
+                     <select>
+                         <option value="">Glasgow Coma Scale</option>
+                         <option>15 - Normal</option>
+                         <option>14 - Mild impairment</option>
+                         <option>13 - Mild impairment</option>
+                         <option>12 - Moderate impairment</option>
+                         <option>11 - Moderate impairment</option>
+                         <option>10 - Moderate impairment</option>
+                         <option>9 - Severe impairment</option>
+                         <option>8 - Severe impairment</option>
+                     </select>
+                     <select>
+                         <option value="">Orientation</option>
+                         <option>Alert & Oriented x4</option>
+                         <option>Alert & Oriented x3</option>
+                         <option>Alert & Oriented x2</option>
+                         <option>Alert & Oriented x1</option>
+                         <option>Confused</option>
+                         <option>Lethargic</option>
+                     </select>
+                 </div>
+                 <div class="section-title">Neurological Exam</div>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> PERRLA</label>
+                     <label><input type="checkbox"> Pupils dilated</label>
+                     <label><input type="checkbox"> Pupils constricted</label>
+                     <label><input type="checkbox"> Unequal pupils</label>
+                 </div>
+                 <div class="checkbox-grid-3">
+                     <label><input type="checkbox"> Strength 5/5 bilateral</label>
+                     <label><input type="checkbox"> Focal weakness</label>
+                     <label><input type="checkbox"> Sensation intact</label>
+                     <label><input type="checkbox"> Numbness/tingling</label>
+                     <label><input type="checkbox"> Reflexes 2+ symmetric</label>
+                     <label><input type="checkbox"> Hyperreflexia</label>
+                 </div>
+                 <textarea placeholder="Neurological examination details"></textarea>
+                 <button type="button" onclick="return false;">Save Neuro Exam</button>
+             </form>
+         </div>
+         
+         <!-- Form 6: Gastrointestinal -->
+         <div class="form-container assessment">
+             <div class="form-header">GASTROINTESTINAL EXAM</div>
+             <form>
+                 <div class="section-title">GI Symptoms</div>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> Nausea</label>
+                     <label><input type="checkbox"> Vomiting</label>
+                     <label><input type="checkbox"> Diarrhea</label>
+                     <label><input type="checkbox"> Constipation</label>
+                     <label><input type="checkbox"> Abdominal pain</label>
+                     <label><input type="checkbox"> Blood in stool</label>
+                 </div>
+                 <div class="section-title">Abdominal Examination</div>
+                 <div class="checkbox-grid-3">
+                     <label><input type="checkbox"> Soft</label>
+                     <label><input type="checkbox"> Non-tender</label>
+                     <label><input type="checkbox"> Non-distended</label>
+                     <label><input type="checkbox"> Bowel sounds present</label>
+                     <label><input type="checkbox"> Rigid</label>
+                     <label><input type="checkbox"> Guarding</label>
+                     <label><input type="checkbox"> Rebound tenderness</label>
+                     <label><input type="checkbox"> Masses palpable</label>
+                     <label><input type="checkbox"> Hepatomegaly</label>
+                 </div>
+                 <input type="text" placeholder="Last bowel movement">
+                 <textarea placeholder="Abdominal examination findings"></textarea>
+                 <button type="button" onclick="return false;">Document GI Exam</button>
             </form>
         </div>
         
@@ -467,54 +472,54 @@
                     <option>Routine</option>
                     <option>Timed</option>
                 </select>
-                <textarea placeholder="Special instructions for laboratory"></textarea>
-                <button type="submit" class="warning">Submit Lab Orders</button>
-            </form>
-        </div>
-        
-        <!-- Form 8: Medication Orders -->
-        <div class="form-container orders">
-            <div class="form-header">MEDICATION ORDERS</div>
-            <form>
-                <div class="section-title">New Prescription</div>
-                <input type="text" placeholder="Medication name">
-                <div class="input-row-3">
-                    <input type="text" placeholder="Strength/Dose">
-                    <select>
-                        <option value="">Route</option>
-                        <option>PO (by mouth)</option>
-                        <option>IV (intravenous)</option>
-                        <option>IM (intramuscular)</option>
-                        <option>SL (sublingual)</option>
-                        <option>Topical</option>
-                        <option>Inhaled</option>
-                        <option>PR (rectal)</option>
-                    </select>
-                    <select>
-                        <option value="">Frequency</option>
-                        <option>Once daily</option>
-                        <option>BID (twice daily)</option>
-                        <option>TID (three times daily)</option>
-                        <option>QID (four times daily)</option>
-                        <option>Q4H (every 4 hours)</option>
-                        <option>Q6H (every 6 hours)</option>
-                        <option>Q8H (every 8 hours)</option>
-                        <option>PRN (as needed)</option>
-                    </select>
-                </div>
-                <div class="input-row">
-                    <input type="number" placeholder="Quantity">
-                    <input type="number" placeholder="Refills">
-                </div>
-                <textarea placeholder="Special instructions and patient counseling"></textarea>
-                <div class="section-title">Safety Checks</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Allergy check completed</label>
-                    <label><input type="checkbox"> Drug interaction reviewed</label>
-                    <label><input type="checkbox"> Renal dosing considered</label>
-                    <label><input type="checkbox"> Generic substitution OK</label>
-                </div>
-                <button type="submit" class="urgent">Send to Pharmacy</button>
+                                 <textarea placeholder="Special instructions for laboratory"></textarea>
+                 <button type="button" onclick="return false;" class="warning">Submit Lab Orders</button>
+             </form>
+         </div>
+         
+         <!-- Form 8: Medication Orders -->
+         <div class="form-container orders">
+             <div class="form-header">MEDICATION ORDERS</div>
+             <form>
+                 <div class="section-title">New Prescription</div>
+                 <input type="text" placeholder="Medication name">
+                 <div class="input-row-3">
+                     <input type="text" placeholder="Strength/Dose">
+                     <select>
+                         <option value="">Route</option>
+                         <option>PO (by mouth)</option>
+                         <option>IV (intravenous)</option>
+                         <option>IM (intramuscular)</option>
+                         <option>SL (sublingual)</option>
+                         <option>Topical</option>
+                         <option>Inhaled</option>
+                         <option>PR (rectal)</option>
+                     </select>
+                     <select>
+                         <option value="">Frequency</option>
+                         <option>Once daily</option>
+                         <option>BID (twice daily)</option>
+                         <option>TID (three times daily)</option>
+                         <option>QID (four times daily)</option>
+                         <option>Q4H (every 4 hours)</option>
+                         <option>Q6H (every 6 hours)</option>
+                         <option>Q8H (every 8 hours)</option>
+                         <option>PRN (as needed)</option>
+                     </select>
+                 </div>
+                 <div class="input-row">
+                     <input type="number" placeholder="Quantity">
+                     <input type="number" placeholder="Refills">
+                 </div>
+                 <textarea placeholder="Special instructions and patient counseling"></textarea>
+                 <div class="section-title">Safety Checks</div>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> Allergy check completed</label>
+                     <label><input type="checkbox"> Drug interaction reviewed</label>
+                     <label><input type="checkbox"> Renal dosing considered</label>
+                     <label><input type="checkbox"> Generic substitution OK</label>
+                 </div>
+                 <button type="button" onclick="return false;" class="urgent">Send to Pharmacy</button>
             </form>
         </div>
         
@@ -581,96 +586,96 @@
                     <label><input type="checkbox"> Position change</label>
                     <label><input type="checkbox"> Nothing helps</label>
                 </div>
-                <textarea placeholder="Additional pain assessment notes"></textarea>
-                <button type="submit">Document Pain Assessment</button>
-            </form>
-        </div>
-        
-        <!-- Form 10: Allergy & Adverse Reactions -->
-        <div class="form-container">
-            <div class="form-header">ALLERGIES & ADVERSE REACTIONS</div>
-            <form>
-                <div class="section-title">New Allergy Entry</div>
-                <input type="text" placeholder="Allergen (medication, food, environmental)">
-                <div class="input-row">
-                    <select>
-                        <option value="">Allergy Type</option>
-                        <option>Drug allergy</option>
-                        <option>Food allergy</option>
-                        <option>Environmental</option>
-                        <option>Contact allergy</option>
-                        <option>Latex</option>
-                        <option>Other</option>
-                    </select>
-                    <select>
-                        <option value="">Severity Level</option>
-                        <option>Mild</option>
-                        <option>Moderate</option>
-                        <option>Severe</option>
-                        <option>Life-threatening</option>
-                        <option>Unknown</option>
-                    </select>
-                </div>
-                <div class="section-title">Reaction Symptoms</div>
-                <div class="checkbox-grid-3">
-                    <label><input type="checkbox"> Rash</label>
-                    <label><input type="checkbox"> Hives</label>
-                    <label><input type="checkbox"> Itching</label>
-                    <label><input type="checkbox"> Swelling</label>
-                    <label><input type="checkbox"> Difficulty breathing</label>
-                    <label><input type="checkbox"> Wheezing</label>
-                    <label><input type="checkbox"> Nausea</label>
-                    <label><input type="checkbox"> Vomiting</label>
-                    <label><input type="checkbox"> Diarrhea</label>
-                    <label><input type="checkbox"> Dizziness</label>
-                    <label><input type="checkbox"> Anaphylaxis</label>
-                    <label><input type="checkbox"> Other</label>
-                </div>
-                <textarea placeholder="Detailed reaction description and treatment history"></textarea>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Verified with patient</label>
-                    <label><input type="checkbox"> Cross-reactivity considered</label>
-                    <label><input type="checkbox"> EpiPen prescribed</label>
-                    <label><input type="checkbox"> Patient educated</label>
-                </div>
-                <button type="submit" class="urgent">Add to Allergy List</button>
-            </form>
-        </div>
-        
-        <!-- Form 11: Imaging Orders -->
-        <div class="form-container orders">
-            <div class="form-header">DIAGNOSTIC IMAGING</div>
-            <form>
-                <div class="section-title">Imaging Studies</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Chest X-ray</label>
-                    <label><input type="checkbox"> Abdominal X-ray</label>
-                    <label><input type="checkbox"> CT Head</label>
-                    <label><input type="checkbox"> CT Chest</label>
-                    <label><input type="checkbox"> CT Abdomen/Pelvis</label>
-                    <label><input type="checkbox"> MRI Brain</label>
-                    <label><input type="checkbox"> MRI Spine</label>
-                    <label><input type="checkbox"> Ultrasound</label>
-                    <label><input type="checkbox"> Echocardiogram</label>
-                    <label><input type="checkbox"> EKG</label>
-                </div>
-                <div class="section-title">Contrast Options</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> With IV contrast</label>
-                    <label><input type="checkbox"> With oral contrast</label>
-                    <label><input type="checkbox"> Without contrast</label>
-                    <label><input type="checkbox"> Contrast allergy protocol</label>
-                </div>
-                <input type="text" placeholder="Clinical indication">
-                <textarea placeholder="Additional imaging instructions"></textarea>
-                <select>
-                    <option value="">Priority</option>
-                    <option>STAT</option>
-                    <option>Urgent (within 2 hours)</option>
-                    <option>Same day</option>
-                    <option>Routine</option>
-                </select>
-                <button type="submit" class="warning">Order Imaging</button>
+                                 <textarea placeholder="Additional pain assessment notes"></textarea>
+                 <button type="button" onclick="return false;">Document Pain Assessment</button>
+             </form>
+         </div>
+         
+         <!-- Form 10: Allergy & Adverse Reactions -->
+         <div class="form-container">
+             <div class="form-header">ALLERGIES & ADVERSE REACTIONS</div>
+             <form>
+                 <div class="section-title">New Allergy Entry</div>
+                 <input type="text" placeholder="Allergen (medication, food, environmental)">
+                 <div class="input-row">
+                     <select>
+                         <option value="">Allergy Type</option>
+                         <option>Drug allergy</option>
+                         <option>Food allergy</option>
+                         <option>Environmental</option>
+                         <option>Contact allergy</option>
+                         <option>Latex</option>
+                         <option>Other</option>
+                     </select>
+                     <select>
+                         <option value="">Severity Level</option>
+                         <option>Mild</option>
+                         <option>Moderate</option>
+                         <option>Severe</option>
+                         <option>Life-threatening</option>
+                         <option>Unknown</option>
+                     </select>
+                 </div>
+                 <div class="section-title">Reaction Symptoms</div>
+                 <div class="checkbox-grid-3">
+                     <label><input type="checkbox"> Rash</label>
+                     <label><input type="checkbox"> Hives</label>
+                     <label><input type="checkbox"> Itching</label>
+                     <label><input type="checkbox"> Swelling</label>
+                     <label><input type="checkbox"> Difficulty breathing</label>
+                     <label><input type="checkbox"> Wheezing</label>
+                     <label><input type="checkbox"> Nausea</label>
+                     <label><input type="checkbox"> Vomiting</label>
+                     <label><input type="checkbox"> Diarrhea</label>
+                     <label><input type="checkbox"> Dizziness</label>
+                     <label><input type="checkbox"> Anaphylaxis</label>
+                     <label><input type="checkbox"> Other</label>
+                 </div>
+                 <textarea placeholder="Detailed reaction description and treatment history"></textarea>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> Verified with patient</label>
+                     <label><input type="checkbox"> Cross-reactivity considered</label>
+                     <label><input type="checkbox"> EpiPen prescribed</label>
+                     <label><input type="checkbox"> Patient educated</label>
+                 </div>
+                 <button type="button" onclick="return false;" class="urgent">Add to Allergy List</button>
+             </form>
+         </div>
+         
+         <!-- Form 11: Imaging Orders -->
+         <div class="form-container orders">
+             <div class="form-header">DIAGNOSTIC IMAGING</div>
+             <form>
+                 <div class="section-title">Imaging Studies</div>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> Chest X-ray</label>
+                     <label><input type="checkbox"> Abdominal X-ray</label>
+                     <label><input type="checkbox"> CT Head</label>
+                     <label><input type="checkbox"> CT Chest</label>
+                     <label><input type="checkbox"> CT Abdomen/Pelvis</label>
+                     <label><input type="checkbox"> MRI Brain</label>
+                     <label><input type="checkbox"> MRI Spine</label>
+                     <label><input type="checkbox"> Ultrasound</label>
+                     <label><input type="checkbox"> Echocardiogram</label>
+                     <label><input type="checkbox"> EKG</label>
+                 </div>
+                 <div class="section-title">Contrast Options</div>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> With IV contrast</label>
+                     <label><input type="checkbox"> With oral contrast</label>
+                     <label><input type="checkbox"> Without contrast</label>
+                     <label><input type="checkbox"> Contrast allergy protocol</label>
+                 </div>
+                 <input type="text" placeholder="Clinical indication">
+                 <textarea placeholder="Additional imaging instructions"></textarea>
+                 <select>
+                     <option value="">Priority</option>
+                     <option>STAT</option>
+                     <option>Urgent (within 2 hours)</option>
+                     <option>Same day</option>
+                     <option>Routine</option>
+                 </select>
+                 <button type="button" onclick="return false;" class="warning">Order Imaging</button>
             </form>
         </div>
         
@@ -709,44 +714,44 @@
                     <label><input type="checkbox"> Addendum required</label>
                     <label><input type="checkbox"> Cosignature needed</label>
                 </div>
-                <button type="submit">Save & Sign Note</button>
-            </form>
-        </div>
-        
-        <!-- Form 13: Discharge Planning -->
-        <div class="form-container">
-            <div class="form-header">DISCHARGE PLANNING</div>
-            <form>
-                <div class="section-title">Discharge Information</div>
-                <div class="input-row">
-                    <input type="date" placeholder="Discharge date">
-                    <input type="time" placeholder="Discharge time">
-                </div>
-                <select>
-                    <option value="">Discharge Disposition</option>
-                    <option>Home</option>
-                    <option>Home with home health</option>
-                    <option>Skilled nursing facility</option>
-                    <option>Rehabilitation facility</option>
-                    <option>Assisted living</option>
-                    <option>Hospice care</option>
-                    <option>Against medical advice</option>
-                </select>
-                <div class="section-title">Discharge Medications</div>
-                <textarea placeholder="List of discharge medications with instructions"></textarea>
-                <div class="section-title">Follow-up Care</div>
-                <textarea placeholder="Follow-up appointments and instructions"></textarea>
-                <div class="section-title">Patient Education</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Diet restrictions reviewed</label>
-                    <label><input type="checkbox"> Medication teaching completed</label>
-                    <label><input type="checkbox"> Activity limitations discussed</label>
-                    <label><input type="checkbox"> Warning signs reviewed</label>
-                    <label><input type="checkbox"> Equipment training provided</label>
-                    <label><input type="checkbox"> Wound care instructions</label>
-                </div>
-                <textarea placeholder="Additional discharge instructions"></textarea>
-                <button type="submit" class="success">Finalize Discharge</button>
+                                 <button type="button" onclick="return false;">Save & Sign Note</button>
+             </form>
+         </div>
+         
+         <!-- Form 13: Discharge Planning -->
+         <div class="form-container">
+             <div class="form-header">DISCHARGE PLANNING</div>
+             <form>
+                 <div class="section-title">Discharge Information</div>
+                 <div class="input-row">
+                     <input type="date" placeholder="Discharge date">
+                     <input type="time" placeholder="Discharge time">
+                 </div>
+                 <select>
+                     <option value="">Discharge Disposition</option>
+                     <option>Home</option>
+                     <option>Home with home health</option>
+                     <option>Skilled nursing facility</option>
+                     <option>Rehabilitation facility</option>
+                     <option>Assisted living</option>
+                     <option>Hospice care</option>
+                     <option>Against medical advice</option>
+                 </select>
+                 <div class="section-title">Discharge Medications</div>
+                 <textarea placeholder="List of discharge medications with instructions"></textarea>
+                 <div class="section-title">Follow-up Care</div>
+                 <textarea placeholder="Follow-up appointments and instructions"></textarea>
+                 <div class="section-title">Patient Education</div>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> Diet restrictions reviewed</label>
+                     <label><input type="checkbox"> Medication teaching completed</label>
+                     <label><input type="checkbox"> Activity limitations discussed</label>
+                     <label><input type="checkbox"> Warning signs reviewed</label>
+                     <label><input type="checkbox"> Equipment training provided</label>
+                     <label><input type="checkbox"> Wound care instructions</label>
+                 </div>
+                 <textarea placeholder="Additional discharge instructions"></textarea>
+                 <button type="button" onclick="return false;" class="success">Finalize Discharge</button>
             </form>
         </div>
         
