@@ -60,11 +60,19 @@
             height: 280px;
         }
         
-        .tall-iframe {
+        .iframe-container {
+            width: 100%;
+            border: none;
+            display: block;
+            height: 280px;
+            background: white;
+        }
+        
+        .tall-iframe, .iframe-container.tall {
             height: 380px;
         }
         
-        .nested-iframe {
+        .nested-iframe, .iframe-container.nested {
             height: 320px;
         }
         
@@ -194,6 +202,32 @@
             padding: 20px;
         }
 
+        .click-to-load {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: #e9ecef;
+            color: #495057;
+            font-size: 10px;
+            padding: 20px;
+            cursor: pointer;
+            border: 2px dashed #ced4da;
+            transition: background-color 0.3s ease;
+        }
+
+        .click-to-load:hover {
+            background: #dee2e6;
+            border-color: #007bff;
+        }
+
+        .click-to-load .load-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
         .loading-spinner {
             width: 20px;
             height: 20px;
@@ -235,15 +269,69 @@
         .network-status.error {
             background: #dc3545;
         }
+
+        .memory-status {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: #6f42c1;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 9px;
+            z-index: 1000;
+        }
+
+        .progressive-section {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+        }
+
+        .progressive-section.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .progressive-section.loading {
+            opacity: 0.5;
+        }
+
+        .section-loading {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 9px;
+            color: #6c757d;
+            margin: 5px 0;
+        }
+
+        .mini-spinner {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #e9ecef;
+            border-top: 1px solid #007bff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .dropdown-loading {
+            color: #6c757d;
+            font-style: italic;
+            font-size: 9px;
+        }
     </style>
 </head>
 <body>
     <div class="element-counter">DENSE EHR: 500+ Elements | 20+ Forms | Progressive Load</div>
     <div class="network-status" id="networkStatus">Network: Idle</div>
+    <div class="memory-status" id="memoryStatus">Images: 0 | ~0MB</div>
     
     <div class="ehr-header">
         <h1>Electronic Health Record - Patient Care Dashboard</h1>
-        <p>Comprehensive Medical Documentation System | Progressive Load Test Environment</p>
+        <p>Comprehensive Medical Documentation System | Click-to-Load Test Environment</p>
+        <div style="font-size: 9px; margin-top: 5px; color: #e9ecef;">⚡ Forms load on demand - Click any form to activate • 50% slower network simulation</div>
     </div>
     
     <!-- Row 1: Primary Assessment Forms -->
@@ -252,37 +340,37 @@
         <!-- Form 1: Chief Complaint -->
         <div class="form-container">
             <div class="form-header">CHIEF COMPLAINT & HPI</div>
-            <iframe id="chief-complaint-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading chief complaint form...</div>
-                    <div class="loading-status">Fetching form structure...</div>
+            <div id="chief-complaint-iframe" class="iframe-container" onclick="loadForm('chief-complaint-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">📋</div>
+                    <div>Click to load Chief Complaint form</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Click anywhere to activate</div>
                 </div>
-            </iframe>
+            </div>
         </div>
         
         <!-- Form 2: Vital Signs - With Nested Monitor -->
         <div class="form-container vital-signs">
             <div class="form-header">VITAL SIGNS</div>
-            <iframe class="nested-iframe" id="vital-signs-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading vital signs monitor...</div>
-                    <div class="loading-status">Connecting to monitoring system...</div>
+            <div class="iframe-container nested" id="vital-signs-iframe" onclick="loadForm('vital-signs-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">💓</div>
+                    <div>Click to load Vital Signs monitor</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Click anywhere to activate</div>
                 </div>
-            </iframe>
+            </div>
         </div>
          
         <!-- Form 3: Cardiovascular Assessment -->
         <div class="form-container assessment">
             <div class="form-header">CARDIOVASCULAR EXAM</div>
-            <iframe id="cardio-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading cardiovascular assessment...</div>
-                    <div class="loading-status">Waiting for vital signs data...</div>
+            <div id="cardio-iframe" class="iframe-container" onclick="loadForm('cardio-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">❤️</div>
+                    <div>Click to load Cardiovascular exam</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Depends on vital signs</div>
                 </div>
-            </iframe>
+            </div>
         </div>
         
     </div>
@@ -293,37 +381,37 @@
         <!-- Form 4: Respiratory Assessment -->
         <div class="form-container assessment">
             <div class="form-header">PULMONARY ASSESSMENT</div>
-            <iframe id="pulmonary-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading pulmonary assessment...</div>
-                    <div class="loading-status">Synchronizing with vital signs...</div>
+            <div id="pulmonary-iframe" class="iframe-container" onclick="loadForm('pulmonary-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">🫁</div>
+                    <div>Click to load Pulmonary assessment</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Depends on vital signs</div>
                 </div>
-            </iframe>
+            </div>
         </div>
          
         <!-- Form 5: Neurological Screen -->
         <div class="form-container assessment">
             <div class="form-header">NEUROLOGICAL ASSESSMENT</div>
-            <iframe id="neuro-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading neurological assessment...</div>
-                    <div class="loading-status">Loading assessment protocols...</div>
+            <div id="neuro-iframe" class="iframe-container" onclick="loadForm('neuro-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">🧠</div>
+                    <div>Click to load Neurological assessment</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Click anywhere to activate</div>
                 </div>
-            </iframe>
+            </div>
         </div>
          
         <!-- Form 6: Gastrointestinal -->
         <div class="form-container assessment">
             <div class="form-header">GASTROINTESTINAL EXAM</div>
-            <iframe id="gi-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading GI assessment...</div>
-                    <div class="loading-status">Fetching examination templates...</div>
+            <div id="gi-iframe" class="iframe-container" onclick="loadForm('gi-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">🔬</div>
+                    <div>Click to load GI assessment</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Click anywhere to activate</div>
                 </div>
-            </iframe>
+            </div>
         </div>
         
     </div>
@@ -334,25 +422,25 @@
         <!-- Form 7: Laboratory Orders - With Nested Lab System -->
         <div class="form-container orders">
             <div class="form-header">LABORATORY ORDERS</div>
-            <iframe class="tall-iframe" id="lab-orders-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading laboratory system...</div>
-                    <div class="loading-status">Connecting to lab network...</div>
+            <div class="iframe-container tall" id="lab-orders-iframe" onclick="loadForm('lab-orders-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">🧪</div>
+                    <div>Click to load Laboratory system</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Depends on cardio & pulmonary</div>
                 </div>
-            </iframe>
+            </div>
         </div>
          
         <!-- Form 8: Medication Orders - With Nested Pharmacy System -->
         <div class="form-container orders">
             <div class="form-header">MEDICATION ORDERS</div>
-            <iframe class="tall-iframe" id="med-orders-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading pharmacy system...</div>
-                    <div class="loading-status">Initializing drug database...</div>
+            <div class="iframe-container tall" id="med-orders-iframe" onclick="loadForm('med-orders-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">💊</div>
+                    <div>Click to load Pharmacy system</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Depends on allergy & lab data</div>
                 </div>
-            </iframe>
+            </div>
         </div>
         
     </div>
@@ -363,37 +451,37 @@
         <!-- Form 9: Pain Assessment -->
         <div class="form-container">
             <div class="form-header">PAIN ASSESSMENT</div>
-            <iframe id="pain-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading pain assessment...</div>
-                    <div class="loading-status">Loading assessment scales...</div>
+            <div id="pain-iframe" class="iframe-container" onclick="loadForm('pain-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">😣</div>
+                    <div>Click to load Pain assessment</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Depends on chief complaint</div>
                 </div>
-            </iframe>
+            </div>
         </div>
          
         <!-- Form 10: Allergy & Adverse Reactions -->
         <div class="form-container">
             <div class="form-header">ALLERGIES & ADVERSE REACTIONS</div>
-            <iframe id="allergy-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading allergy management...</div>
-                    <div class="loading-status">Checking drug interactions...</div>
+            <div id="allergy-iframe" class="iframe-container" onclick="loadForm('allergy-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">⚠️</div>
+                    <div>Click to load Allergy management</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Click anywhere to activate</div>
                 </div>
-            </iframe>
+            </div>
         </div>
          
         <!-- Form 11: Imaging Orders -->
         <div class="form-container orders">
             <div class="form-header">DIAGNOSTIC IMAGING</div>
-            <iframe id="imaging-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading imaging system...</div>
-                    <div class="loading-status">Connecting to radiology...</div>
+            <div id="imaging-iframe" class="iframe-container" onclick="loadForm('imaging-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">📷</div>
+                    <div>Click to load Imaging system</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Depends on cardio & pulmonary</div>
                 </div>
-            </iframe>
+            </div>
         </div>
         
     </div>
@@ -404,25 +492,25 @@
         <!-- Form 12: Progress Notes -->
         <div class="form-container">
             <div class="form-header">PROGRESS NOTES</div>
-            <iframe id="notes-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading documentation system...</div>
-                    <div class="loading-status">Synchronizing patient data...</div>
+            <div id="notes-iframe" class="iframe-container" onclick="loadForm('notes-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">📝</div>
+                    <div>Click to load Documentation system</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Depends on all assessments</div>
                 </div>
-            </iframe>
+            </div>
         </div>
          
         <!-- Form 13: Discharge Planning -->
         <div class="form-container">
             <div class="form-header">DISCHARGE PLANNING</div>
-            <iframe id="discharge-iframe">
-                <div class="loading-placeholder">
-                    <div class="loading-spinner"></div>
-                    <div>Loading discharge planner...</div>
-                    <div class="loading-status">Coordinating care transitions...</div>
+            <div id="discharge-iframe" class="iframe-container" onclick="loadForm('discharge-iframe')">
+                <div class="click-to-load">
+                    <div class="load-icon">🏠</div>
+                    <div>Click to load Discharge planner</div>
+                    <div style="font-size: 8px; margin-top: 5px;">Depends on notes & meds</div>
                 </div>
-            </iframe>
+            </div>
         </div>
         
     </div>
@@ -439,7 +527,7 @@
         class ResourceManager {
             constructor() {
                 this.maxConcurrentRequests = 4;
-                this.networkBandwidthKBps = 500; // 500 KB/s simulated bandwidth
+                this.networkBandwidthKBps = 250; // 250 KB/s simulated bandwidth (50% slower)
                 this.activeRequests = [];
                 this.requestQueue = [];
                 this.totalBytesTransferred = 0;
@@ -507,6 +595,15 @@
                     statusEl.textContent = `Network: Active (${activeCount} transfers)`;
                     statusEl.className = 'network-status busy';
                 }
+            }
+
+            // Load background image and keep it in memory (real network usage + memory pressure)
+            async loadBackgroundImage() {
+                return loadBackgroundImage();
+            }
+
+            updateMemoryStatus() {
+                updateMemoryStatus();
             }
         }
 
@@ -617,12 +714,12 @@
                 });
             }
 
-            async simulateNetworkCall(description, sizeKB, baseDelay = 300) {
+            async simulateNetworkCall(description, sizeKB, baseDelay = 600) {
                 // Acquire network slot (this creates contention between parallel agents)
                 const requestId = await this.resourceManager.acquireNetworkSlot(sizeKB);
                 
-                // Simulate actual data transfer with realistic delays
-                const networkDelay = baseDelay + (Math.random() * 400); // 300-700ms base + jitter
+                // Simulate actual data transfer with realistic delays (50% slower)
+                const networkDelay = baseDelay + (Math.random() * 800); // 600-1400ms base + jitter
                 await new Promise(resolve => setTimeout(resolve, networkDelay));
                 
                 // Generate realistic payload to simulate memory usage
@@ -725,22 +822,30 @@
 
                 this.updateLoadingStatus(iframeId, 'Rendering form...');
                 
-                // Build and load the actual iframe content
-                const content = this.buildIframeContent(template, formStructure, validationRules, styleData);
+                // Build and load the actual content
+                const content = this.buildFormContent(template, formStructure, validationRules, styleData);
                 
-                const iframe = document.getElementById(iframeId);
-                iframe.srcdoc = content;
+                const container = document.getElementById(iframeId);
+                container.innerHTML = content;
                 
                 // Mark as loaded
                 this.loadedIframes.add(iframeId);
                 
                 // Simulate final processing delay
                 await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 300));
+                
+                // Setup dropdown loading for any visible selects
+                setTimeout(() => {
+                    const visibleSelects = container.querySelectorAll('.progressive-section.revealed select');
+                    visibleSelects.forEach(select => {
+                        setupDropdownLoading(select);
+                    });
+                }, 500);
             }
 
             updateLoadingStatus(iframeId, status) {
-                const iframe = document.getElementById(iframeId);
-                const placeholder = iframe.querySelector('.loading-status');
+                const container = document.getElementById(iframeId);
+                const placeholder = container.querySelector('.loading-status');
                 if (placeholder) {
                     placeholder.textContent = status;
                 }
@@ -754,17 +859,15 @@
                 if (this.loadingPromises.has(iframeId)) {
                     await this.loadingPromises.get(iframeId);
                 } else {
-                    // Not started loading yet, wait for it to appear
-                    while (!this.loadedIframes.has(iframeId) && !this.loadingPromises.has(iframeId)) {
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    }
-                    if (this.loadingPromises.has(iframeId)) {
-                        await this.loadingPromises.get(iframeId);
+                    // In click-to-load mode, automatically trigger dependency loading
+                    console.log(`Auto-loading dependency: ${iframeId}`);
+                    if (window.loadForm) {
+                        await window.loadForm(iframeId);
                     }
                 }
             }
 
-            buildIframeContent(template, formStructure, validationRules, styleData) {
+                        buildFormContent(template, formStructure, validationRules, styleData) {
                 // Generate realistic form content based on template
                 const backgroundColors = {
                     'vital-signs': '#e3f2fd',
@@ -780,11 +883,9 @@
                 const bgColor = backgroundColors[template.title.toLowerCase().replace(/[^a-z]/g, '-')] || '#f8f9fa';
                 
                 return `
-                    <html><head><style>
-                        body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: ${bgColor}; font-size: 11px; line-height: 1.2; }
+                    <style>
                         .form-section { margin-bottom: 8px; }
                         .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
-                        input, select, textarea { width: 100%; padding: 3px; border: 1px solid #ced4da; border-radius: 2px; font-size: 10px; margin-bottom: 3px; box-sizing: border-box; }
                         .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
                         .input-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; margin-bottom: 4px; }
                         .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 4px; }
@@ -797,13 +898,17 @@
                         .success { background: #28a745; }
                         .urgent { background: #dc3545; }
                         .warning { background: #ffc107; color: #212529; }
-                    </style></head><body>
-                        <form style="background:white; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
-                            ${this.generateFormFields(template)}
-                            ${template.hasNestedContent ? this.generateNestedContent(template) : ''}
-                            <button type="button" onclick="return false;">${this.getButtonText(template.title)}</button>
-                        </form>
-                    </body></html>
+                        .progressive-section { opacity: 0; transform: translateY(10px); transition: all 0.3s ease; margin-bottom: 8px; }
+                        .progressive-section.revealed { opacity: 1; transform: translateY(0); }
+                        .progressive-section.loading { opacity: 0.5; }
+                        .section-loading { display: flex; align-items: center; gap: 8px; font-size: 9px; color: #6c757d; margin: 5px 0; }
+                        .mini-spinner { width: 12px; height: 12px; border: 1px solid #e9ecef; border-top: 1px solid #007bff; border-radius: 50%; animation: spin 0.8s linear infinite; }
+                        .dropdown-loading { color: #6c757d; font-style: italic; font-size: 9px; }
+                    </style>
+                    <div style="background:${bgColor}; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
+                        ${this.generateFormFields(template)}
+                        ${template.hasNestedContent ? this.generateNestedContent(template) : ''}
+                    </div>
                 `;
             }
 
@@ -829,512 +934,588 @@
                 return generator ? generator.call(this) : '<div>Form content loading...</div>';
             }
 
-            generateChiefComplaintFields() {
-                return `
-                    <div class="form-section">
-                        <input type="text" placeholder="Primary complaint">
-                        <div class="input-row">
-                            <select>
-                                <option value="">Onset</option>
-                                <option>Sudden</option>
-                                <option>Gradual</option>
-                                <option>Progressive</option>
-                            </select>
-                            <input type="text" placeholder="Duration">
+                        generateProgressiveForm(template) {
+                const sections = this.getProgressiveSections(template.title);
+                let html = '';
+                
+                sections.forEach((section, index) => {
+                    const isFirst = index === 0;
+                    const sectionClass = isFirst ? 'progressive-section revealed' : 'progressive-section';
+                    const sectionId = `section-${template.title.toLowerCase().replace(/[^a-z]/g, '-')}-${index}`;
+                    
+                    html += `
+                        <div class="${sectionClass}" id="${sectionId}">
+                            <div class="section-title">${section.title}</div>
+                            ${section.content}
                         </div>
-                        <div class="input-row-3">
-                            <input type="number" placeholder="Pain scale 1-10" min="1" max="10">
-                            <select>
-                                <option value="">Quality</option>
-                                <option>Sharp</option>
-                                <option>Dull</option>
-                                <option>Crushing</option>
-                                <option>Burning</option>
-                                <option>Throbbing</option>
-                            </select>
-                            <select>
-                                <option value="">Location</option>
-                                <option>Chest</option>
-                                <option>Abdomen</option>
-                                <option>Head</option>
-                                <option>Back</option>
-                                <option>Extremities</option>
-                            </select>
-                        </div>
-                        <textarea placeholder="History of present illness"></textarea>
-                        <div class="checkbox-grid">
-                            <label><input type="checkbox"> Radiating pain</label>
-                            <label><input type="checkbox"> Associated nausea</label>
-                            <label><input type="checkbox"> Shortness of breath</label>
-                            <label><input type="checkbox"> Diaphoresis</label>
-                        </div>
+                    `;
+                });
+                
+                // Add submit button (hidden until all sections revealed)
+                html += `
+                    <div class="progressive-section" id="submit-${template.title.toLowerCase().replace(/[^a-z]/g, '-')}">
+                        <button type="button" onclick="return false;">${this.getButtonText(template.title)}</button>
                     </div>
                 `;
+                
+                return html;
             }
 
-            generateVitalSignsFields() {
-                return `
-                    <div class="section-title">Primary Vitals</div>
-                    <div class="input-row">
-                        <input type="number" placeholder="Systolic BP">
-                        <input type="number" placeholder="Diastolic BP">
-                    </div>
-                    <div class="input-row-3">
-                        <input type="number" placeholder="Heart Rate">
-                        <input type="number" placeholder="Resp Rate">
-                        <input type="number" step="0.1" placeholder="Temperature °F">
-                    </div>
-                    <div class="input-row">
-                        <input type="number" placeholder="O2 Saturation %">
-                        <select>
-                            <option value="">O2 Delivery</option>
-                            <option>Room Air</option>
-                            <option>2L Nasal Cannula</option>
-                            <option>4L Nasal Cannula</option>
-                            <option>Non-rebreather</option>
-                            <option>BiPAP</option>
-                        </select>
-                    </div>
-                    <div class="section-title">Additional Measurements</div>
-                    <div class="input-row">
-                        <input type="number" placeholder="Weight (lbs)">
-                        <input type="number" placeholder="Height (inches)">
-                    </div>
-                    <div class="input-row">
-                        <input type="number" step="0.1" placeholder="BMI">
-                        <select>
-                            <option value="">Pain Scale</option>
-                            <option>0 - No pain</option>
-                            <option>1-3 - Mild</option>
-                            <option>4-6 - Moderate</option>
-                            <option>7-10 - Severe</option>
-                        </select>
-                    </div>
-                `;
+            getProgressiveSections(formTitle) {
+                const sectionMaps = {
+                    'Chief Complaint & HPI': [
+                        {
+                            title: 'Primary Complaint',
+                            content: `<input type="text" placeholder="Primary complaint" onchange="window.revealNextSection(this)">`
+                        },
+                        {
+                            title: 'Onset & Duration',
+                            content: `
+                                <div class="input-row">
+                                    <select onchange="window.revealNextSection(this)">
+                                        <option value="">Onset</option>
+                                        <option>Sudden</option>
+                                        <option>Gradual</option>
+                                        <option>Progressive</option>
+                                    </select>
+                                    <input type="text" placeholder="Duration" onchange="window.revealNextSection(this)">
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Pain Assessment',
+                            content: `
+                                <div class="input-row-3">
+                                    <input type="number" placeholder="Pain scale 1-10" min="1" max="10" onchange="window.revealNextSection(this)">
+                                    <select onchange="window.revealNextSection(this)">
+                                        <option value="">Quality</option>
+                                        <option>Sharp</option>
+                                        <option>Dull</option>
+                                        <option>Crushing</option>
+                                        <option>Burning</option>
+                                        <option>Throbbing</option>
+                                    </select>
+                                    <select onchange="window.revealNextSection(this)">
+                                        <option value="">Location</option>
+                                        <option>Chest</option>
+                                        <option>Abdomen</option>
+                                        <option>Head</option>
+                                        <option>Back</option>
+                                        <option>Extremities</option>
+                                    </select>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'History & Symptoms',
+                            content: `
+                                <textarea placeholder="History of present illness" onchange="window.revealNextSection(this)"></textarea>
+                                <div class="checkbox-grid">
+                                    <label><input type="checkbox" onchange="window.revealNextSection(this)"> Radiating pain</label>
+                                    <label><input type="checkbox" onchange="window.revealNextSection(this)"> Associated nausea</label>
+                                    <label><input type="checkbox" onchange="window.revealNextSection(this)"> Shortness of breath</label>
+                                    <label><input type="checkbox" onchange="window.revealNextSection(this)"> Diaphoresis</label>
+                                </div>
+                            `
+                        }
+                    ],
+                    'Vital Signs Monitor': [
+                        {
+                            title: 'Blood Pressure',
+                            content: `
+                                <div class="input-row">
+                                    <input type="number" placeholder="Systolic BP" onchange="window.revealNextSection(this)">
+                                    <input type="number" placeholder="Diastolic BP" onchange="window.revealNextSection(this)">
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Basic Vitals',
+                            content: `
+                                <div class="input-row-3">
+                                    <input type="number" placeholder="Heart Rate" onchange="window.revealNextSection(this)">
+                                    <input type="number" placeholder="Resp Rate" onchange="window.revealNextSection(this)">
+                                    <input type="number" step="0.1" placeholder="Temperature °F" onchange="window.revealNextSection(this)">
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Oxygen & Support',
+                            content: `
+                                <div class="input-row">
+                                    <input type="number" placeholder="O2 Saturation %" onchange="window.revealNextSection(this)">
+                                    <select onchange="window.revealNextSection(this)">
+                                        <option value="">O2 Delivery</option>
+                                        <option>Room Air</option>
+                                        <option>2L Nasal Cannula</option>
+                                        <option>4L Nasal Cannula</option>
+                                        <option>Non-rebreather</option>
+                                        <option>BiPAP</option>
+                                    </select>
+                                </div>
+                            `
+                        },
+                        {
+                            title: 'Additional Measurements',
+                            content: `
+                                <div class="input-row">
+                                    <input type="number" placeholder="Weight (lbs)" onchange="window.revealNextSection(this)">
+                                    <input type="number" placeholder="Height (inches)" onchange="window.revealNextSection(this)">
+                                </div>
+                                <div class="input-row">
+                                    <input type="number" step="0.1" placeholder="BMI" onchange="window.revealNextSection(this)">
+                                    <select onchange="window.revealNextSection(this)">
+                                        <option value="">Pain Scale</option>
+                                        <option>0 - No pain</option>
+                                        <option>1-3 - Mild</option>
+                                        <option>4-6 - Moderate</option>
+                                        <option>7-10 - Severe</option>
+                                    </select>
+                                </div>
+                            `
+                        }
+                    ]
+                    // I'll add more form types as we implement them
+                };
+                
+                return sectionMaps[formTitle] || [
+                    {
+                        title: 'Form Content',
+                        content: `<input type="text" placeholder="Loading form content..." onchange="window.revealNextSection(this)">`
+                    }
+                ];
+            }
+
+            generateChiefComplaintFields() {
+                return this.generateProgressiveForm({ title: 'Chief Complaint & HPI' });
+            }
+
+                        generateVitalSignsFields() {
+                return this.generateProgressiveForm({ title: 'Vital Signs Monitor' });
             }
 
             generateCardioFields() {
                 return `
-                    <div class="section-title">Heart Rate & Rhythm</div>
-                    <div class="input-row">
-                        <input type="number" placeholder="Heart Rate (bpm)">
-                        <select>
-                            <option value="">Rhythm</option>
-                            <option>Regular</option>
-                            <option>Irregular</option>
-                            <option>Tachycardic</option>
-                            <option>Bradycardic</option>
-                        </select>
-                    </div>
-                    <div class="section-title">Heart Sounds</div>
-                    <div class="checkbox-grid-3">
-                        <label><input type="checkbox"> S1 Normal</label>
-                        <label><input type="checkbox"> S2 Normal</label>
-                        <label><input type="checkbox"> S3 Gallop</label>
-                        <label><input type="checkbox"> S4 Gallop</label>
-                        <label><input type="checkbox"> Murmur</label>
-                        <label><input type="checkbox"> Rub</label>
-                    </div>
-                    <div class="section-title">Peripheral Assessment</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Pulses 2+ bilateral</label>
-                        <label><input type="checkbox"> Peripheral edema</label>
-                        <label><input type="checkbox"> JVD present</label>
-                        <label><input type="checkbox"> Cyanosis</label>
-                    </div>
-                    <textarea placeholder="Additional cardiovascular findings"></textarea>
+                        <div class="section-title">Heart Rate & Rhythm</div>
+                        <div class="input-row">
+                            <input type="number" placeholder="Heart Rate (bpm)">
+                            <select>
+                                <option value="">Rhythm</option>
+                                <option>Regular</option>
+                                <option>Irregular</option>
+                                <option>Tachycardic</option>
+                                <option>Bradycardic</option>
+                            </select>
+                        </div>
+                        <div class="section-title">Heart Sounds</div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> S1 Normal</label>
+                            <label><input type="checkbox"> S2 Normal</label>
+                            <label><input type="checkbox"> S3 Gallop</label>
+                            <label><input type="checkbox"> S4 Gallop</label>
+                            <label><input type="checkbox"> Murmur</label>
+                            <label><input type="checkbox"> Rub</label>
+                        </div>
+                        <div class="section-title">Peripheral Assessment</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Pulses 2+ bilateral</label>
+                            <label><input type="checkbox"> Peripheral edema</label>
+                            <label><input type="checkbox"> JVD present</label>
+                            <label><input type="checkbox"> Cyanosis</label>
+                        </div>
+                        <textarea placeholder="Additional cardiovascular findings"></textarea>
                 `;
             }
 
             generatePulmonaryFields() {
                 return `
-                    <div class="section-title">Respiratory Effort</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Dyspnea at rest</label>
-                        <label><input type="checkbox"> Dyspnea on exertion</label>
-                        <label><input type="checkbox"> Use of accessory muscles</label>
-                        <label><input type="checkbox"> Retractions</label>
-                    </div>
-                    <div class="section-title">Lung Sounds</div>
-                    <div class="checkbox-grid-3">
-                        <label><input type="checkbox"> Clear bilateral</label>
-                        <label><input type="checkbox"> Wheezes</label>
-                        <label><input type="checkbox"> Rales/Crackles</label>
-                        <label><input type="checkbox"> Rhonchi</label>
-                        <label><input type="checkbox"> Diminished left</label>
-                        <label><input type="checkbox"> Diminished right</label>
-                    </div>
-                    <div class="section-title">Other Findings</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Productive cough</label>
-                        <label><input type="checkbox"> Dry cough</label>
-                        <label><input type="checkbox"> Chest tightness</label>
-                        <label><input type="checkbox"> Pleuritic pain</label>
-                    </div>
-                    <textarea placeholder="Detailed pulmonary examination notes"></textarea>
+                        <div class="section-title">Respiratory Effort</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Dyspnea at rest</label>
+                            <label><input type="checkbox"> Dyspnea on exertion</label>
+                            <label><input type="checkbox"> Use of accessory muscles</label>
+                            <label><input type="checkbox"> Retractions</label>
+                        </div>
+                        <div class="section-title">Lung Sounds</div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> Clear bilateral</label>
+                            <label><input type="checkbox"> Wheezes</label>
+                            <label><input type="checkbox"> Rales/Crackles</label>
+                            <label><input type="checkbox"> Rhonchi</label>
+                            <label><input type="checkbox"> Diminished left</label>
+                            <label><input type="checkbox"> Diminished right</label>
+                        </div>
+                        <div class="section-title">Other Findings</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Productive cough</label>
+                            <label><input type="checkbox"> Dry cough</label>
+                            <label><input type="checkbox"> Chest tightness</label>
+                            <label><input type="checkbox"> Pleuritic pain</label>
+                        </div>
+                        <textarea placeholder="Detailed pulmonary examination notes"></textarea>
                 `;
             }
 
             generateNeuroFields() {
                 return `
-                    <div class="section-title">Mental Status</div>
-                    <div class="input-row">
-                        <select>
-                            <option value="">Glasgow Coma Scale</option>
-                            <option>15 - Normal</option>
-                            <option>14 - Mild impairment</option>
-                            <option>13 - Mild impairment</option>
-                            <option>12 - Moderate impairment</option>
-                            <option>11 - Moderate impairment</option>
-                            <option>10 - Moderate impairment</option>
-                            <option>9 - Severe impairment</option>
-                            <option>8 - Severe impairment</option>
-                        </select>
-                        <select>
-                            <option value="">Orientation</option>
-                            <option>Alert & Oriented x4</option>
-                            <option>Alert & Oriented x3</option>
-                            <option>Alert & Oriented x2</option>
-                            <option>Alert & Oriented x1</option>
-                            <option>Confused</option>
-                            <option>Lethargic</option>
-                        </select>
-                    </div>
-                    <div class="section-title">Neurological Exam</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> PERRLA</label>
-                        <label><input type="checkbox"> Pupils dilated</label>
-                        <label><input type="checkbox"> Pupils constricted</label>
-                        <label><input type="checkbox"> Unequal pupils</label>
-                    </div>
-                    <div class="checkbox-grid-3">
-                        <label><input type="checkbox"> Strength 5/5 bilateral</label>
-                        <label><input type="checkbox"> Focal weakness</label>
-                        <label><input type="checkbox"> Sensation intact</label>
-                        <label><input type="checkbox"> Numbness/tingling</label>
-                        <label><input type="checkbox"> Reflexes 2+ symmetric</label>
-                        <label><input type="checkbox"> Hyperreflexia</label>
-                    </div>
-                    <textarea placeholder="Neurological examination details"></textarea>
+                        <div class="section-title">Mental Status</div>
+                        <div class="input-row">
+                            <select>
+                                <option value="">Glasgow Coma Scale</option>
+                                <option>15 - Normal</option>
+                                <option>14 - Mild impairment</option>
+                                <option>13 - Mild impairment</option>
+                                <option>12 - Moderate impairment</option>
+                                <option>11 - Moderate impairment</option>
+                                <option>10 - Moderate impairment</option>
+                                <option>9 - Severe impairment</option>
+                                <option>8 - Severe impairment</option>
+                            </select>
+                            <select>
+                                <option value="">Orientation</option>
+                                <option>Alert & Oriented x4</option>
+                                <option>Alert & Oriented x3</option>
+                                <option>Alert & Oriented x2</option>
+                                <option>Alert & Oriented x1</option>
+                                <option>Confused</option>
+                                <option>Lethargic</option>
+                            </select>
+                        </div>
+                        <div class="section-title">Neurological Exam</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> PERRLA</label>
+                            <label><input type="checkbox"> Pupils dilated</label>
+                            <label><input type="checkbox"> Pupils constricted</label>
+                            <label><input type="checkbox"> Unequal pupils</label>
+                        </div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> Strength 5/5 bilateral</label>
+                            <label><input type="checkbox"> Focal weakness</label>
+                            <label><input type="checkbox"> Sensation intact</label>
+                            <label><input type="checkbox"> Numbness/tingling</label>
+                            <label><input type="checkbox"> Reflexes 2+ symmetric</label>
+                            <label><input type="checkbox"> Hyperreflexia</label>
+                        </div>
+                        <textarea placeholder="Neurological examination details"></textarea>
                 `;
             }
 
             generateGIFields() {
                 return `
-                    <div class="section-title">GI Symptoms</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Nausea</label>
-                        <label><input type="checkbox"> Vomiting</label>
-                        <label><input type="checkbox"> Diarrhea</label>
-                        <label><input type="checkbox"> Constipation</label>
-                        <label><input type="checkbox"> Abdominal pain</label>
-                        <label><input type="checkbox"> Blood in stool</label>
-                    </div>
-                    <div class="section-title">Abdominal Examination</div>
-                    <div class="checkbox-grid-3">
-                        <label><input type="checkbox"> Soft</label>
-                        <label><input type="checkbox"> Non-tender</label>
-                        <label><input type="checkbox"> Non-distended</label>
-                        <label><input type="checkbox"> Bowel sounds present</label>
-                        <label><input type="checkbox"> Rigid</label>
-                        <label><input type="checkbox"> Guarding</label>
-                        <label><input type="checkbox"> Rebound tenderness</label>
-                        <label><input type="checkbox"> Masses palpable</label>
-                        <label><input type="checkbox"> Hepatomegaly</label>
-                    </div>
-                    <input type="text" placeholder="Last bowel movement">
-                    <textarea placeholder="Abdominal examination findings"></textarea>
+                        <div class="section-title">GI Symptoms</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Nausea</label>
+                            <label><input type="checkbox"> Vomiting</label>
+                            <label><input type="checkbox"> Diarrhea</label>
+                            <label><input type="checkbox"> Constipation</label>
+                            <label><input type="checkbox"> Abdominal pain</label>
+                            <label><input type="checkbox"> Blood in stool</label>
+                        </div>
+                        <div class="section-title">Abdominal Examination</div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> Soft</label>
+                            <label><input type="checkbox"> Non-tender</label>
+                            <label><input type="checkbox"> Non-distended</label>
+                            <label><input type="checkbox"> Bowel sounds present</label>
+                            <label><input type="checkbox"> Rigid</label>
+                            <label><input type="checkbox"> Guarding</label>
+                            <label><input type="checkbox"> Rebound tenderness</label>
+                            <label><input type="checkbox"> Masses palpable</label>
+                            <label><input type="checkbox"> Hepatomegaly</label>
+                        </div>
+                        <input type="text" placeholder="Last bowel movement">
+                        <textarea placeholder="Abdominal examination findings"></textarea>
                 `;
             }
 
             generateLabFields() {
                 return `
-                    <div class="section-title">Complete Blood Count</div>
-                    <div class="checkbox-grid-3">
-                        <label><input type="checkbox"> WBC with differential</label>
-                        <label><input type="checkbox"> Hemoglobin</label>
-                        <label><input type="checkbox"> Hematocrit</label>
-                        <label><input type="checkbox"> Platelet count</label>
-                        <label><input type="checkbox"> RBC count</label>
-                        <label><input type="checkbox"> RBC indices</label>
-                    </div>
-                    <div class="section-title">Basic Metabolic Panel</div>
-                    <div class="checkbox-grid-3">
-                        <label><input type="checkbox"> Glucose</label>
-                        <label><input type="checkbox"> BUN</label>
-                        <label><input type="checkbox"> Creatinine</label>
-                        <label><input type="checkbox"> Sodium</label>
-                        <label><input type="checkbox"> Potassium</label>
-                        <label><input type="checkbox"> Chloride</label>
-                        <label><input type="checkbox"> CO2</label>
-                        <label><input type="checkbox"> eGFR</label>
-                        <label><input type="checkbox"> Anion gap</label>
-                    </div>
-                    <div class="section-title">Cardiac Markers</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Troponin I</label>
-                        <label><input type="checkbox"> CK-MB</label>
-                        <label><input type="checkbox"> BNP</label>
-                        <label><input type="checkbox"> D-Dimer</label>
-                    </div>
-                    <select>
-                        <option value="">Priority Level</option>
-                        <option>STAT</option>
-                        <option>Urgent</option>
-                        <option>Routine</option>
-                        <option>Timed</option>
-                    </select>
-                    <textarea placeholder="Special instructions for laboratory"></textarea>
+                        <div class="section-title">Complete Blood Count</div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> WBC with differential</label>
+                            <label><input type="checkbox"> Hemoglobin</label>
+                            <label><input type="checkbox"> Hematocrit</label>
+                            <label><input type="checkbox"> Platelet count</label>
+                            <label><input type="checkbox"> RBC count</label>
+                            <label><input type="checkbox"> RBC indices</label>
+                        </div>
+                        <div class="section-title">Basic Metabolic Panel</div>
+                        <div class="checkbox-grid-3">
+                            <label><input type="checkbox"> Glucose</label>
+                            <label><input type="checkbox"> BUN</label>
+                            <label><input type="checkbox"> Creatinine</label>
+                            <label><input type="checkbox"> Sodium</label>
+                            <label><input type="checkbox"> Potassium</label>
+                            <label><input type="checkbox"> Chloride</label>
+                            <label><input type="checkbox"> CO2</label>
+                            <label><input type="checkbox"> eGFR</label>
+                            <label><input type="checkbox"> Anion gap</label>
+                        </div>
+                        <div class="section-title">Cardiac Markers</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Troponin I</label>
+                            <label><input type="checkbox"> CK-MB</label>
+                            <label><input type="checkbox"> BNP</label>
+                            <label><input type="checkbox"> D-Dimer</label>
+                        </div>
+                        <select>
+                            <option value="">Priority Level</option>
+                            <option>STAT</option>
+                            <option>Urgent</option>
+                            <option>Routine</option>
+                            <option>Timed</option>
+                        </select>
+                        <textarea placeholder="Special instructions for laboratory"></textarea>
                 `;
             }
 
             generateMedFields() {
                 return `
-                    <div class="section-title">New Prescription</div>
-                    <input type="text" placeholder="Medication name">
-                    <div class="input-row-3">
-                        <input type="text" placeholder="Strength/Dose">
-                        <select>
-                            <option value="">Route</option>
-                            <option>PO (by mouth)</option>
-                            <option>IV (intravenous)</option>
-                            <option>IM (intramuscular)</option>
-                            <option>SL (sublingual)</option>
-                            <option>Topical</option>
-                            <option>Inhaled</option>
-                            <option>PR (rectal)</option>
-                        </select>
-                        <select>
-                            <option value="">Frequency</option>
-                            <option>Once daily</option>
-                            <option>BID (twice daily)</option>
-                            <option>TID (three times daily)</option>
-                            <option>QID (four times daily)</option>
-                            <option>Q4H (every 4 hours)</option>
-                            <option>Q6H (every 6 hours)</option>
-                            <option>Q8H (every 8 hours)</option>
-                            <option>PRN (as needed)</option>
-                        </select>
-                    </div>
-                    <div class="input-row">
-                        <input type="number" placeholder="Quantity">
-                        <input type="number" placeholder="Refills">
-                    </div>
-                    <textarea placeholder="Special instructions and patient counseling"></textarea>
-                    <div class="section-title">Safety Checks</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Allergy check completed</label>
-                        <label><input type="checkbox"> Drug interaction reviewed</label>
-                        <label><input type="checkbox"> Renal dosing considered</label>
-                        <label><input type="checkbox"> Generic substitution OK</label>
-                    </div>
+                        <div class="section-title">New Prescription</div>
+                        <input type="text" placeholder="Medication name">
+                        <div class="input-row-3">
+                            <input type="text" placeholder="Strength/Dose">
+                            <select>
+                                <option value="">Route</option>
+                                <option>PO (by mouth)</option>
+                                <option>IV (intravenous)</option>
+                                <option>IM (intramuscular)</option>
+                                <option>SL (sublingual)</option>
+                                <option>Topical</option>
+                                <option>Inhaled</option>
+                                <option>PR (rectal)</option>
+                            </select>
+                            <select>
+                                <option value="">Frequency</option>
+                                <option>Once daily</option>
+                                <option>BID (twice daily)</option>
+                                <option>TID (three times daily)</option>
+                                <option>QID (four times daily)</option>
+                                <option>Q4H (every 4 hours)</option>
+                                <option>Q6H (every 6 hours)</option>
+                                <option>Q8H (every 8 hours)</option>
+                                <option>PRN (as needed)</option>
+                            </select>
+                        </div>
+                        <div class="input-row">
+                            <input type="number" placeholder="Quantity">
+                            <input type="number" placeholder="Refills">
+                        </div>
+                        <textarea placeholder="Special instructions and patient counseling"></textarea>
+                        <div class="section-title">Safety Checks</div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Allergy check completed</label>
+                            <label><input type="checkbox"> Drug interaction reviewed</label>
+                            <label><input type="checkbox"> Renal dosing considered</label>
+                            <label><input type="checkbox"> Generic substitution OK</label>
+                        </div>
                 `;
             }
 
             generatePainFields() {
                 return `
-                    <div class="section-title">Pain Characteristics</div>
-                    <div class="input-row">
-                        <select>
-                            <option value="">Pain Scale (0-10)</option>
-                            <option>0 - No pain</option>
-                            <option>1 - Minimal</option>
-                            <option>2 - Mild</option>
-                            <option>3 - Mild</option>
-                            <option>4 - Moderate</option>
-                            <option>5 - Moderate</option>
-                            <option>6 - Moderate</option>
-                            <option>7 - Severe</option>
-                            <option>8 - Severe</option>
-                            <option>9 - Very severe</option>
-                            <option>10 - Worst possible</option>
-                        </select>
-                        <select>
-                            <option value="">Primary Location</option>
-                            <option>Chest</option>
-                            <option>Abdomen</option>
-                            <option>Back</option>
-                            <option>Head/Neck</option>
-                            <option>Arms</option>
-                            <option>Legs</option>
-                            <option>Generalized</option>
-                        </select>
-                    </div>
-                    <div class="section-title">Pain Quality</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Sharp/Stabbing</label>
-                        <label><input type="checkbox"> Dull/Aching</label>
-                        <label><input type="checkbox"> Burning</label>
-                        <label><input type="checkbox"> Throbbing</label>
-                        <label><input type="checkbox"> Cramping</label>
-                        <label><input type="checkbox"> Pressure</label>
-                    </div>
-                    <div class="section-title">Aggravating Factors</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Movement</label>
-                        <label><input type="checkbox"> Deep breathing</label>
-                        <label><input type="checkbox"> Coughing</label>
-                        <label><input type="checkbox"> Position changes</label>
-                        <label><input type="checkbox"> Activity</label>
-                        <label><input type="checkbox"> Stress</label>
-                    </div>
-                    <div class="section-title">Relieving Factors</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Rest</label>
-                        <label><input type="checkbox"> Medication</label>
-                        <label><input type="checkbox"> Heat application</label>
-                        <label><input type="checkbox"> Cold application</label>
-                        <label><input type="checkbox"> Position change</label>
-                        <label><input type="checkbox"> Nothing helps</label>
-                    </div>
-                    <textarea placeholder="Additional pain assessment notes"></textarea>
+                <div class="section-title">Pain Characteristics</div>
+                <div class="input-row">
+                    <select>
+                        <option value="">Pain Scale (0-10)</option>
+                        <option>0 - No pain</option>
+                        <option>1 - Minimal</option>
+                        <option>2 - Mild</option>
+                        <option>3 - Mild</option>
+                        <option>4 - Moderate</option>
+                        <option>5 - Moderate</option>
+                        <option>6 - Moderate</option>
+                        <option>7 - Severe</option>
+                        <option>8 - Severe</option>
+                        <option>9 - Very severe</option>
+                        <option>10 - Worst possible</option>
+                    </select>
+                    <select>
+                        <option value="">Primary Location</option>
+                        <option>Chest</option>
+                        <option>Abdomen</option>
+                        <option>Back</option>
+                        <option>Head/Neck</option>
+                        <option>Arms</option>
+                        <option>Legs</option>
+                        <option>Generalized</option>
+                    </select>
+                </div>
+                <div class="section-title">Pain Quality</div>
+                <div class="checkbox-grid">
+                    <label><input type="checkbox"> Sharp/Stabbing</label>
+                    <label><input type="checkbox"> Dull/Aching</label>
+                    <label><input type="checkbox"> Burning</label>
+                    <label><input type="checkbox"> Throbbing</label>
+                    <label><input type="checkbox"> Cramping</label>
+                    <label><input type="checkbox"> Pressure</label>
+                </div>
+                <div class="section-title">Aggravating Factors</div>
+                <div class="checkbox-grid">
+                    <label><input type="checkbox"> Movement</label>
+                    <label><input type="checkbox"> Deep breathing</label>
+                    <label><input type="checkbox"> Coughing</label>
+                    <label><input type="checkbox"> Position changes</label>
+                    <label><input type="checkbox"> Activity</label>
+                    <label><input type="checkbox"> Stress</label>
+                </div>
+                <div class="section-title">Relieving Factors</div>
+                <div class="checkbox-grid">
+                    <label><input type="checkbox"> Rest</label>
+                    <label><input type="checkbox"> Medication</label>
+                    <label><input type="checkbox"> Heat application</label>
+                    <label><input type="checkbox"> Cold application</label>
+                    <label><input type="checkbox"> Position change</label>
+                    <label><input type="checkbox"> Nothing helps</label>
+                </div>
+                                 <textarea placeholder="Additional pain assessment notes"></textarea>
                 `;
             }
 
             generateAllergyFields() {
                 return `
-                    <div class="section-title">New Allergy Entry</div>
-                    <input type="text" placeholder="Allergen (medication, food, environmental)">
-                    <div class="input-row">
-                        <select>
-                            <option value="">Allergy Type</option>
-                            <option>Drug allergy</option>
-                            <option>Food allergy</option>
-                            <option>Environmental</option>
-                            <option>Contact allergy</option>
-                            <option>Latex</option>
-                            <option>Other</option>
-                        </select>
-                        <select>
-                            <option value="">Severity Level</option>
-                            <option>Mild</option>
-                            <option>Moderate</option>
-                            <option>Severe</option>
-                            <option>Life-threatening</option>
-                            <option>Unknown</option>
-                        </select>
-                    </div>
-                    <div class="section-title">Reaction Symptoms</div>
-                    <div class="checkbox-grid-3">
-                        <label><input type="checkbox"> Rash</label>
-                        <label><input type="checkbox"> Hives</label>
-                        <label><input type="checkbox"> Itching</label>
-                        <label><input type="checkbox"> Swelling</label>
-                        <label><input type="checkbox"> Difficulty breathing</label>
-                        <label><input type="checkbox"> Wheezing</label>
-                        <label><input type="checkbox"> Nausea</label>
-                        <label><input type="checkbox"> Vomiting</label>
-                        <label><input type="checkbox"> Diarrhea</label>
-                        <label><input type="checkbox"> Dizziness</label>
-                        <label><input type="checkbox"> Anaphylaxis</label>
-                        <label><input type="checkbox"> Other</label>
-                    </div>
-                    <textarea placeholder="Detailed reaction description and treatment history"></textarea>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Verified with patient</label>
-                        <label><input type="checkbox"> Cross-reactivity considered</label>
-                        <label><input type="checkbox"> EpiPen prescribed</label>
-                        <label><input type="checkbox"> Patient educated</label>
-                    </div>
+                 <div class="section-title">New Allergy Entry</div>
+                 <input type="text" placeholder="Allergen (medication, food, environmental)">
+                 <div class="input-row">
+                     <select>
+                         <option value="">Allergy Type</option>
+                         <option>Drug allergy</option>
+                         <option>Food allergy</option>
+                         <option>Environmental</option>
+                         <option>Contact allergy</option>
+                         <option>Latex</option>
+                         <option>Other</option>
+                     </select>
+                     <select>
+                         <option value="">Severity Level</option>
+                         <option>Mild</option>
+                         <option>Moderate</option>
+                         <option>Severe</option>
+                         <option>Life-threatening</option>
+                         <option>Unknown</option>
+                     </select>
+                 </div>
+                 <div class="section-title">Reaction Symptoms</div>
+                 <div class="checkbox-grid-3">
+                     <label><input type="checkbox"> Rash</label>
+                     <label><input type="checkbox"> Hives</label>
+                     <label><input type="checkbox"> Itching</label>
+                     <label><input type="checkbox"> Swelling</label>
+                     <label><input type="checkbox"> Difficulty breathing</label>
+                     <label><input type="checkbox"> Wheezing</label>
+                     <label><input type="checkbox"> Nausea</label>
+                     <label><input type="checkbox"> Vomiting</label>
+                     <label><input type="checkbox"> Diarrhea</label>
+                     <label><input type="checkbox"> Dizziness</label>
+                     <label><input type="checkbox"> Anaphylaxis</label>
+                     <label><input type="checkbox"> Other</label>
+                 </div>
+                 <textarea placeholder="Detailed reaction description and treatment history"></textarea>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> Verified with patient</label>
+                     <label><input type="checkbox"> Cross-reactivity considered</label>
+                     <label><input type="checkbox"> EpiPen prescribed</label>
+                     <label><input type="checkbox"> Patient educated</label>
+                 </div>
                 `;
             }
 
             generateImagingFields() {
                 return `
-                    <div class="section-title">Imaging Studies</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Chest X-ray</label>
-                        <label><input type="checkbox"> Abdominal X-ray</label>
-                        <label><input type="checkbox"> CT Head</label>
-                        <label><input type="checkbox"> CT Chest</label>
-                        <label><input type="checkbox"> CT Abdomen/Pelvis</label>
-                        <label><input type="checkbox"> MRI Brain</label>
-                        <label><input type="checkbox"> MRI Spine</label>
-                        <label><input type="checkbox"> Ultrasound</label>
-                        <label><input type="checkbox"> Echocardiogram</label>
-                        <label><input type="checkbox"> EKG</label>
-                    </div>
-                    <div class="section-title">Contrast Options</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> With IV contrast</label>
-                        <label><input type="checkbox"> With oral contrast</label>
-                        <label><input type="checkbox"> Without contrast</label>
-                        <label><input type="checkbox"> Contrast allergy protocol</label>
-                    </div>
-                    <input type="text" placeholder="Clinical indication">
-                    <textarea placeholder="Additional imaging instructions"></textarea>
-                    <select>
-                        <option value="">Priority</option>
-                        <option>STAT</option>
-                        <option>Urgent (within 2 hours)</option>
-                        <option>Same day</option>
-                        <option>Routine</option>
-                    </select>
+                 <div class="section-title">Imaging Studies</div>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> Chest X-ray</label>
+                     <label><input type="checkbox"> Abdominal X-ray</label>
+                     <label><input type="checkbox"> CT Head</label>
+                     <label><input type="checkbox"> CT Chest</label>
+                     <label><input type="checkbox"> CT Abdomen/Pelvis</label>
+                     <label><input type="checkbox"> MRI Brain</label>
+                     <label><input type="checkbox"> MRI Spine</label>
+                     <label><input type="checkbox"> Ultrasound</label>
+                     <label><input type="checkbox"> Echocardiogram</label>
+                     <label><input type="checkbox"> EKG</label>
+                 </div>
+                 <div class="section-title">Contrast Options</div>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> With IV contrast</label>
+                     <label><input type="checkbox"> With oral contrast</label>
+                     <label><input type="checkbox"> Without contrast</label>
+                     <label><input type="checkbox"> Contrast allergy protocol</label>
+                 </div>
+                 <input type="text" placeholder="Clinical indication">
+                 <textarea placeholder="Additional imaging instructions"></textarea>
+                 <select>
+                     <option value="">Priority</option>
+                     <option>STAT</option>
+                     <option>Urgent (within 2 hours)</option>
+                     <option>Same day</option>
+                     <option>Routine</option>
+                 </select>
                 `;
             }
 
             generateNotesFields() {
                 return `
-                    <div class="section-title">Note Details</div>
-                    <div class="input-row">
-                        <select>
-                            <option value="">Note Type</option>
-                            <option>Progress Note</option>
-                            <option>Consultation Note</option>
-                            <option>Procedure Note</option>
-                            <option>Discharge Summary</option>
-                            <option>Admission Note</option>
-                        </select>
-                        <input type="datetime-local" placeholder="Date/Time">
-                    </div>
-                    <div class="section-title">SOAP Format</div>
-                    <textarea placeholder="Subjective: Patient reports..."></textarea>
-                    <textarea placeholder="Objective: Physical examination reveals..."></textarea>
-                    <textarea placeholder="Assessment: Clinical impression and diagnosis..."></textarea>
-                    <textarea placeholder="Plan: Treatment plan and follow-up..."></textarea>
-                    <div class="section-title">Provider Information</div>
-                    <input type="text" placeholder="Attending physician">
-                    <input type="text" placeholder="Service/Department">
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Attending review completed</label>
-                        <label><input type="checkbox"> Teaching attending note</label>
-                        <label><input type="checkbox"> Addendum required</label>
-                        <label><input type="checkbox"> Cosignature needed</label>
-                    </div>
+                <div class="section-title">Note Details</div>
+                <div class="input-row">
+                    <select>
+                        <option value="">Note Type</option>
+                        <option>Progress Note</option>
+                        <option>Consultation Note</option>
+                        <option>Procedure Note</option>
+                        <option>Discharge Summary</option>
+                        <option>Admission Note</option>
+                    </select>
+                    <input type="datetime-local" placeholder="Date/Time">
+                </div>
+                <div class="section-title">SOAP Format</div>
+                <textarea placeholder="Subjective: Patient reports..."></textarea>
+                <textarea placeholder="Objective: Physical examination reveals..."></textarea>
+                <textarea placeholder="Assessment: Clinical impression and diagnosis..."></textarea>
+                <textarea placeholder="Plan: Treatment plan and follow-up..."></textarea>
+                <div class="section-title">Provider Information</div>
+                <input type="text" placeholder="Attending physician">
+                <input type="text" placeholder="Service/Department">
+                <div class="checkbox-grid">
+                    <label><input type="checkbox"> Attending review completed</label>
+                    <label><input type="checkbox"> Teaching attending note</label>
+                    <label><input type="checkbox"> Addendum required</label>
+                    <label><input type="checkbox"> Cosignature needed</label>
+                </div>
                 `;
             }
 
             generateDischargeFields() {
                 return `
-                    <div class="section-title">Discharge Information</div>
-                    <div class="input-row">
-                        <input type="date" placeholder="Discharge date">
-                        <input type="time" placeholder="Discharge time">
-                    </div>
-                    <select>
-                        <option value="">Discharge Disposition</option>
-                        <option>Home</option>
-                        <option>Home with home health</option>
-                        <option>Skilled nursing facility</option>
-                        <option>Rehabilitation facility</option>
-                        <option>Assisted living</option>
-                        <option>Hospice care</option>
-                        <option>Against medical advice</option>
-                    </select>
-                    <div class="section-title">Discharge Medications</div>
-                    <textarea placeholder="List of discharge medications with instructions"></textarea>
-                    <div class="section-title">Follow-up Care</div>
-                    <textarea placeholder="Follow-up appointments and instructions"></textarea>
-                    <div class="section-title">Patient Education</div>
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox"> Diet restrictions reviewed</label>
-                        <label><input type="checkbox"> Medication teaching completed</label>
-                        <label><input type="checkbox"> Activity limitations discussed</label>
-                        <label><input type="checkbox"> Warning signs reviewed</label>
-                        <label><input type="checkbox"> Equipment training provided</label>
-                        <label><input type="checkbox"> Wound care instructions</label>
-                    </div>
-                    <textarea placeholder="Additional discharge instructions"></textarea>
+                 <div class="section-title">Discharge Information</div>
+                 <div class="input-row">
+                     <input type="date" placeholder="Discharge date">
+                     <input type="time" placeholder="Discharge time">
+                 </div>
+                 <select>
+                     <option value="">Discharge Disposition</option>
+                     <option>Home</option>
+                     <option>Home with home health</option>
+                     <option>Skilled nursing facility</option>
+                     <option>Rehabilitation facility</option>
+                     <option>Assisted living</option>
+                     <option>Hospice care</option>
+                     <option>Against medical advice</option>
+                 </select>
+                 <div class="section-title">Discharge Medications</div>
+                 <textarea placeholder="List of discharge medications with instructions"></textarea>
+                 <div class="section-title">Follow-up Care</div>
+                 <textarea placeholder="Follow-up appointments and instructions"></textarea>
+                 <div class="section-title">Patient Education</div>
+                 <div class="checkbox-grid">
+                     <label><input type="checkbox"> Diet restrictions reviewed</label>
+                     <label><input type="checkbox"> Medication teaching completed</label>
+                     <label><input type="checkbox"> Activity limitations discussed</label>
+                     <label><input type="checkbox"> Warning signs reviewed</label>
+                     <label><input type="checkbox"> Equipment training provided</label>
+                     <label><input type="checkbox"> Wound care instructions</label>
+                 </div>
+                 <textarea placeholder="Additional discharge instructions"></textarea>
                 `;
             }
 
@@ -1355,7 +1536,7 @@
                                     <div class='alert' style='text-align:center; margin-top:4px;'>Connect Patient Monitor</div>
                                 </body></html>
                             "></iframe>
-                        </div>
+        </div>
                     `;
                 }
                 
@@ -1380,7 +1561,7 @@
                                     '></iframe>
                                 </body></html>
                             "></iframe>
-                        </div>
+    </div>
                     `;
                 }
                 
@@ -1399,7 +1580,7 @@
                                     <div class='alert-item'>⚠ Monitor renal function</div>
                                 </body></html>
                             "></iframe>
-                        </div>
+    </div>
                     `;
                 }
                 
@@ -1424,6 +1605,49 @@
                 };
                 
                 return buttonTexts[title] || 'Save Form';
+            }
+
+            async restoreSectionContent(sectionElement) {
+                // Extract the section info from the element ID
+                const sectionId = sectionElement.id;
+                const match = sectionId.match(/section-(.+)-(\d+)/);
+                
+                if (!match) {
+                    // This is likely a submit button section
+                    const submitMatch = sectionId.match(/submit-(.+)/);
+                    if (submitMatch) {
+                        const formType = submitMatch[1].replace(/-/g, ' ');
+                        const buttonText = this.getButtonText(this.titleCaseConvert(formType));
+                        sectionElement.innerHTML = `<button type="button" onclick="return false;">${buttonText}</button>`;
+                    }
+                    return;
+                }
+                
+                const formKey = match[1];
+                const sectionIndex = parseInt(match[2]);
+                
+                // Get the form title from the key
+                const titleMap = {
+                    'chief-complaint---hpi': 'Chief Complaint & HPI',
+                    'vital-signs-monitor': 'Vital Signs Monitor'
+                };
+                
+                const formTitle = titleMap[formKey] || this.titleCaseConvert(formKey.replace(/-/g, ' '));
+                const sections = this.getProgressiveSections(formTitle);
+                
+                if (sections[sectionIndex]) {
+                    const section = sections[sectionIndex];
+                    sectionElement.innerHTML = `
+                        <div class="section-title">${section.title}</div>
+                        ${section.content}
+                    `;
+                }
+            }
+
+            titleCaseConvert(str) {
+                return str.replace(/\w\S*/g, (txt) => {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
             }
 
             async executeLoadingPlan(plan) {
@@ -1461,17 +1685,374 @@
             { iframe: 'discharge-iframe', dependencies: ['notes-iframe', 'med-orders-iframe'] }
         ];
 
+        // Global variables for click-to-load functionality
+        let resourceManager;
+        let loader;
+        let formLoadStates = new Set(); // Track which forms are loaded or loading
+        // Global memory bloat objects to simulate heavy application like heap snapshot
+        let imageCache = []; // Keep all loaded images in memory to grow memory usage
+        let stringCache = []; // Large string objects (96MB+ like in heap snapshot)
+        let objectCache = []; // Complex nested objects
+        let domCache = []; // Hidden DOM elements with event listeners
+
+        // Global function to load forms on click
+        window.loadForm = async function(iframeId) {
+            if (formLoadStates.has(iframeId)) {
+                return; // Already loaded or loading
+            }
+            
+            formLoadStates.add(iframeId);
+            
+            // Show loading state
+            const container = document.getElementById(iframeId);
+            container.innerHTML = `
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading form...</div>
+                    <div class="loading-status">Initializing...</div>
+                </div>
+            `;
+            
+            // Find dependencies for this iframe
+            const formPlan = loadingPlan.find(plan => plan.iframe === iframeId);
+            const dependencies = formPlan ? formPlan.dependencies : [];
+            
+            // Load the form
+            await loader.loadIframe(iframeId, dependencies);
+        };
+
+        // Global function for progressive section reveal
+        window.revealNextSection = async function(triggerElement) {
+            // Find the current section
+            let currentSection = triggerElement.closest('.progressive-section');
+            if (!currentSection) return;
+            
+            // Find next unrevealed section
+            let nextSection = currentSection.nextElementSibling;
+            while (nextSection && nextSection.classList.contains('revealed')) {
+                nextSection = nextSection.nextElementSibling;
+            }
+            
+            if (!nextSection || !nextSection.classList.contains('progressive-section')) {
+                return; // No more sections
+            }
+            
+            // Show loading state for next section
+            nextSection.classList.add('loading');
+            nextSection.innerHTML = `
+                <div class="section-loading">
+                    <div class="mini-spinner"></div>
+                    <span>Loading next section...</span>
+                </div>
+            `;
+            
+            // Trigger network activity with background image load
+            await loadBackgroundImage();
+            
+            // Add delay for perceived loading
+            await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 700));
+            
+            // Restore section content and reveal
+            await loader.restoreSectionContent(nextSection);
+            nextSection.classList.remove('loading');
+            nextSection.classList.add('revealed');
+            
+            // Setup dropdown loading for any selects in this section
+            const selects = nextSection.querySelectorAll('select');
+            selects.forEach(select => setupDropdownLoading(select));
+        };
+
+        // Global aggressive memory loading function
+        async function loadBackgroundImage() {
+            return new Promise((resolve) => {
+                const imageId = Math.floor(Math.random() * 100) + 200;
+                const img = new Image();
+                const startTime = Date.now();
+                
+                img.onload = () => {
+                    const loadTime = Date.now() - startTime;
+                    const imageSizeKB = Math.round((img.naturalWidth * img.naturalHeight * 4) / 1024);
+                    
+                    // Keep image in memory cache
+                    imageCache.push({
+                        image: img,
+                        id: imageId,
+                        loadTime: loadTime,
+                        sizeKB: imageSizeKB,
+                        timestamp: Date.now()
+                    });
+                    
+                    // Create massive memory bloat on every interaction
+                    createMemoryBloat();
+                    
+                    updateMemoryStatus();
+                    resolve(loadTime);
+                };
+                
+                img.onerror = () => {
+                    // Still create memory bloat even if image fails
+                    createMemoryBloat();
+                    updateMemoryStatus();
+                    resolve(0);
+                };
+                
+                img.src = `https://picsum.photos/id/${imageId}/200/300?random=${Date.now()}`;
+            });
+        }
+
+        // Create massive memory bloat similar to heap snapshot (300MB+) - 2x faster growth
+        function createMemoryBloat() {
+            // Create large string objects (like the 96MB of strings in heap) - 2x more strings
+            const largeString = 'x'.repeat(1024 * 200); // 200KB string per iteration
+            for (let i = 0; i < 20; i++) { // 50% reduction: 40 -> 20
+                stringCache.push({
+                    data: largeString + Math.random(),
+                    metadata: JSON.stringify({
+                        timestamp: Date.now(),
+                        iteration: i,
+                        formData: generateFakeFormData(),
+                        userSession: generateFakeUserSession()
+                    }),
+                    id: Date.now() + i
+                });
+            }
+            
+            // Create 2x more complex objects with deep nesting
+            for (let obj = 0; obj < 2; obj++) { // 50% reduction: 4 -> 2
+                const complexObject = {
+                    id: Math.random(),
+                    timestamp: Date.now(),
+                    nestedData: {},
+                    arrays: [],
+                    functions: []
+                };
+                
+                // Fill with nested data (like CSSStyleRule objects in heap) - 2x more data
+                for (let i = 0; i < 400; i++) { // 50% reduction: 800 -> 400
+                    complexObject.nestedData[`key_${i}`] = {
+                        value: 'x'.repeat(2000),
+                        subObject: {
+                            data: new Array(100).fill(0).map(() => Math.random()),
+                            metadata: { created: Date.now(), index: i }
+                        }
+                    };
+                    complexObject.arrays.push(new Array(200).fill(0).map(() => ({
+                        id: Math.random(),
+                        data: 'content_' + i + '_' + Math.random()
+                    })));
+                }
+                
+                objectCache.push(complexObject);
+            }
+            
+            // Create 2x DOM bloat containers
+            for (let d = 0; d < 2; d++) { // 50% reduction: 4 -> 2
+                createDOMBloat();
+            }
+            
+            // Create 2x CSS bloat stylesheets
+            for (let c = 0; c < 2; c++) { // 50% reduction: 4 -> 2
+                createCSSBloat();
+            }
+        }
+
+        function generateFakeFormData() {
+            const fields = ['firstName', 'lastName', 'email', 'address', 'city', 'state', 'zip', 'phone', 'notes', 'history'];
+            const data = {};
+            fields.forEach(field => {
+                data[field] = 'x'.repeat(Math.floor(Math.random() * 4000) + 2000); // 50% reduction: 2-6KB per field
+            });
+            data.history = new Array(200).fill(0).map(() => ({ // 50% reduction: 400 -> 200
+                action: 'fieldChange',
+                timestamp: Date.now() - Math.random() * 1000000,
+                data: 'x'.repeat(2000) // 50% reduction: 4000 -> 2000
+            }));
+            return data;
+        }
+
+        function generateFakeUserSession() {
+            return {
+                sessionId: 'session_' + Math.random(),
+                startTime: Date.now() - Math.random() * 1000000,
+                interactions: new Array(1000).fill(0).map(() => ({ // 50% reduction: 2000 -> 1000
+                    type: 'click',
+                    target: 'element_' + Math.random(),
+                    timestamp: Date.now() - Math.random() * 1000000,
+                    payload: 'x'.repeat(1000) // 50% reduction: 2000 -> 1000
+                })),
+                formStates: new Array(100).fill(0).map(() => ({ // 50% reduction: 200 -> 100
+                    formId: 'form_' + Math.random(),
+                    state: 'x'.repeat(10000), // 50% reduction: 20000 -> 10000
+                    validationErrors: new Array(40).fill(0).map(() => 'error_' + Math.random()) // 50% reduction: 80 -> 40
+                }))
+            };
+        }
+
+        function createDOMBloat() {
+            // Create hidden DOM elements that consume memory (like Window objects in heap)
+            const container = document.createElement('div');
+            container.style.display = 'none';
+            container.id = 'memory-bloat-' + Date.now() + '-' + Math.random();
+            
+            // Create many nested elements with event listeners (creates closures) - 2x more elements
+            for (let i = 0; i < 200; i++) { // 50% reduction: 400 -> 200
+                const element = document.createElement('div');
+                element.innerHTML = 'x'.repeat(4000); // 50% reduction: 8000 -> 4000
+                element.className = 'bloat-element-' + i;
+                element.setAttribute('data-index', i);
+                element.setAttribute('data-timestamp', Date.now());
+                element.setAttribute('data-random', Math.random());
+                element.setAttribute('data-extra-1', 'x'.repeat(500)); // 50% reduction
+                element.setAttribute('data-extra-2', 'x'.repeat(500));
+                
+                // Add event listeners that create closures (retains memory) - reduced to 2 events
+                ['click', 'mouseover'].forEach(eventType => {
+                    element.addEventListener(eventType, function(e) {
+                        const capturedData = {
+                            timestamp: Date.now(),
+                            data: 'x'.repeat(4000), // 50% reduction: 8000 -> 4000
+                            random: Math.random(),
+                            formData: generateFakeFormData()
+                        };
+                        return () => capturedData;
+                    });
+                });
+                
+                container.appendChild(element);
+            }
+            
+            document.body.appendChild(container);
+            domCache.push(container);
+        }
+
+        function createCSSBloat() {
+            // Create dynamic stylesheets (like CSSStyleRule objects in heap) - 2x more rules
+            const style = document.createElement('style');
+            let cssRules = '';
+            
+            for (let i = 0; i < 400; i++) { // 50% reduction: 800 -> 400
+                cssRules += `
+                .dynamic-rule-${i}-${Date.now()}-${Math.random()} {
+                    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="%23${Math.floor(Math.random()*16777215).toString(16)}"/></svg>');
+                    color: #${Math.floor(Math.random()*16777215).toString(16)};
+                    font-family: "font-${i}-${Math.random()}";
+                    content: "${'x'.repeat(2000)}"; // 50% reduction: 4000 -> 2000
+                    border: 1px solid #${Math.floor(Math.random()*16777215).toString(16)};
+                    box-shadow: 0 0 10px #${Math.floor(Math.random()*16777215).toString(16)};
+                    animation: anim-${i} 1s infinite;
+                }
+                .dynamic-rule-${i}-${Date.now()}-${Math.random()}:hover {
+                    background: #${Math.floor(Math.random()*16777215).toString(16)};
+                }
+                @keyframes anim-${i} {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                `;
+            }
+            
+            style.textContent = cssRules;
+            style.id = 'dynamic-css-' + Date.now() + '-' + Math.random();
+            document.head.appendChild(style);
+        }
+
+        // Memory status update function
+        function updateMemoryStatus() {
+            const statusEl = document.getElementById('memoryStatus');
+            if (!statusEl) return;
+            
+            // Calculate total memory from all caches
+            const totalImages = imageCache.length;
+            const imageSizeKB = imageCache.reduce((sum, cached) => sum + cached.sizeKB, 0);
+            
+            const stringCount = stringCache.length;
+            const stringSizeKB = stringCache.reduce((sum, cached) => sum + (cached.data.length / 1024), 0);
+            
+            const objectCount = objectCache.length;
+            const objectSizeKB = objectCount * 1000; // 50% reduction: rough estimate per complex object
+            
+            const domCount = domCache.length;
+            const domSizeKB = domCount * 400; // 50% reduction: rough estimate per DOM container
+            
+            const totalSizeKB = imageSizeKB + stringSizeKB + objectSizeKB + domSizeKB;
+            const totalSizeMB = (totalSizeKB / 1024).toFixed(1);
+            
+            statusEl.textContent = `Memory: ${totalSizeMB}MB | Images: ${totalImages} | Strings: ${stringCount} | Objects: ${objectCount} | DOM: ${domCount}`;
+            
+            // Change color based on memory usage (more aggressive thresholds)
+            if (totalSizeMB > 200) {
+                statusEl.style.background = '#dc3545'; // Red for very high memory
+                statusEl.style.color = 'white';
+            } else if (totalSizeMB > 100) {
+                statusEl.style.background = '#fd7e14'; // Orange for high memory
+                statusEl.style.color = 'white';
+            } else if (totalSizeMB > 50) {
+                statusEl.style.background = '#ffc107'; // Yellow for growing memory
+                statusEl.style.color = '#212529';
+            } else {
+                statusEl.style.background = '#6f42c1'; // Purple for low memory
+                statusEl.style.color = 'white';
+            }
+        }
+
+        // Setup dropdown loading with timeout and image loading
+        function setupDropdownLoading(selectElement) {
+            // Skip if already setup or has options
+            if (selectElement.dataset.loaded || selectElement.options.length > 1) {
+                return;
+            }
+            
+            selectElement.dataset.loaded = 'true';
+            const originalHTML = selectElement.innerHTML;
+            
+            // Clear options and show loading
+            selectElement.innerHTML = '<option class="dropdown-loading">Loading options...</option>';
+            selectElement.disabled = true;
+            
+            // Load after timeout + background image
+            setTimeout(async () => {
+                await loadBackgroundImage();
+                selectElement.innerHTML = originalHTML;
+                selectElement.disabled = false;
+            }, 400 + Math.random() * 600);
+        }
+
+        // Helper for setting up dropdown loading from iframe context
+        window.setupDropdownLoadingFromIframe = function(selectElement) {
+            if (selectElement.dataset.loaded || selectElement.options.length > 1) {
+                return;
+            }
+            
+            selectElement.dataset.loaded = 'true';
+            const originalHTML = selectElement.innerHTML;
+            
+            selectElement.innerHTML = '<option class="dropdown-loading">Loading options...</option>';
+            selectElement.disabled = true;
+            
+            setTimeout(async () => {
+                await resourceManager.loadBackgroundImage();
+                selectElement.innerHTML = originalHTML;
+                selectElement.disabled = false;
+            }, 400 + Math.random() * 600);
+        };
+
         // Initialize the system when page loads
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('Initializing Progressive EHR Loading System...');
+            console.log('Initializing Click-to-Load EHR System...');
             
-            const resourceManager = new ResourceManager();
-            const loader = new ProgressiveIframeLoader(resourceManager);
+            resourceManager = new ResourceManager();
+            loader = new ProgressiveIframeLoader(resourceManager);
             
-            // Start the progressive loading
-            await loader.executeLoadingPlan(loadingPlan);
+            // Periodic memory usage reporting
+            setInterval(() => {
+                if (imageCache.length > 0) {
+                    const totalSizeKB = imageCache.reduce((sum, cached) => sum + cached.sizeKB, 0);
+                    const totalSizeMB = (totalSizeKB / 1024).toFixed(1);
+                    console.log(`📊 Memory Status: ${imageCache.length} images cached, ~${totalSizeMB}MB total`);
+                }
+            }, 10000); // Every 10 seconds
             
-            console.log('Progressive loading initiated. Forms will load based on dependencies and resource availability.');
+            console.log('Click-to-Load EHR System ready. Click on any form to load it.');
         });
     </script>
     
