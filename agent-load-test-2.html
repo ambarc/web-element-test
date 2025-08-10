@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dense EHR - Medical Forms Testing Environment (Progressive Load)</title>
+    <style>
+        body {
+            margin: 8px;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            font-size: 11px;
+            line-height: 1.2;
+        }
+        
+        .ehr-header {
+            background: #2c3e50;
+            color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .form-container {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .form-header {
+            background: #495057;
+            color: white;
+            padding: 6px 8px;
+            margin: 0;
+            font-weight: bold;
+            font-size: 10px;
+            border-radius: 3px 3px 0 0;
+        }
+        
+        iframe {
+            width: 100%;
+            border: none;
+            display: block;
+            height: 280px;
+        }
+        
+        .tall-iframe {
+            height: 380px;
+        }
+        
+        .nested-iframe {
+            height: 320px;
+        }
+        
+        .form-section {
+            margin-bottom: 8px;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            color: #495057;
+            font-size: 10px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 2px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 3px;
+            border: 1px solid #ced4da;
+            border-radius: 2px;
+            font-size: 10px;
+            margin-bottom: 3px;
+            box-sizing: border-box;
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+        
+        .input-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 3px;
+            margin-bottom: 4px;
+        }
+        
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            margin-bottom: 4px;
+        }
+        
+        .checkbox-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2px;
+            margin-bottom: 4px;
+        }
+        
+        label {
+            font-size: 9px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        textarea {
+            height: 40px;
+            resize: vertical;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-size: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 4px;
+        }
+        
+        button:active {
+            background: #0056b3;
+            transform: translateY(1px);
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .urgent { background: #dc3545; }
+        .warning { background: #ffc107; color: #212529; }
+        .success { background: #28a745; }
+        
+        .vital-signs {
+            background: #e3f2fd;
+        }
+        
+        .assessment {
+            background: #fff3e0;
+        }
+        
+        .orders {
+            background: #f3e5f5;
+        }
+        
+        .element-counter {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+            z-index: 1000;
+        }
+
+        /* Loading States */
+        .loading-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 10px;
+            padding: 20px;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e9ecef;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-status {
+            font-size: 9px;
+            color: #868e96;
+            margin-top: 5px;
+        }
+
+        .network-status {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 9px;
+            z-index: 1000;
+        }
+
+        .network-status.busy {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .network-status.error {
+            background: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="element-counter">DENSE EHR: 500+ Elements | 20+ Forms | Progressive Load</div>
+    <div class="network-status" id="networkStatus">Network: Idle</div>
+    
+    <div class="ehr-header">
+        <h1>Electronic Health Record - Patient Care Dashboard</h1>
+        <p>Comprehensive Medical Documentation System | Progressive Load Test Environment</p>
+    </div>
+    
+    <!-- Row 1: Primary Assessment Forms -->
+    <div class="form-grid">
+        
+        <!-- Form 1: Chief Complaint -->
+        <div class="form-container">
+            <div class="form-header">CHIEF COMPLAINT & HPI</div>
+            <iframe id="chief-complaint-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading chief complaint form...</div>
+                    <div class="loading-status">Fetching form structure...</div>
+                </div>
+            </iframe>
+        </div>
+        
+        <!-- Form 2: Vital Signs - With Nested Monitor -->
+        <div class="form-container vital-signs">
+            <div class="form-header">VITAL SIGNS</div>
+            <iframe class="nested-iframe" id="vital-signs-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading vital signs monitor...</div>
+                    <div class="loading-status">Connecting to monitoring system...</div>
+                </div>
+            </iframe>
+        </div>
+         
+        <!-- Form 3: Cardiovascular Assessment -->
+        <div class="form-container assessment">
+            <div class="form-header">CARDIOVASCULAR EXAM</div>
+            <iframe id="cardio-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading cardiovascular assessment...</div>
+                    <div class="loading-status">Waiting for vital signs data...</div>
+                </div>
+            </iframe>
+        </div>
+        
+    </div>
+    
+    <!-- Row 2: System Reviews -->
+    <div class="form-grid">
+        
+        <!-- Form 4: Respiratory Assessment -->
+        <div class="form-container assessment">
+            <div class="form-header">PULMONARY ASSESSMENT</div>
+            <iframe id="pulmonary-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading pulmonary assessment...</div>
+                    <div class="loading-status">Synchronizing with vital signs...</div>
+                </div>
+            </iframe>
+        </div>
+         
+        <!-- Form 5: Neurological Screen -->
+        <div class="form-container assessment">
+            <div class="form-header">NEUROLOGICAL ASSESSMENT</div>
+            <iframe id="neuro-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading neurological assessment...</div>
+                    <div class="loading-status">Loading assessment protocols...</div>
+                </div>
+            </iframe>
+        </div>
+         
+        <!-- Form 6: Gastrointestinal -->
+        <div class="form-container assessment">
+            <div class="form-header">GASTROINTESTINAL EXAM</div>
+            <iframe id="gi-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading GI assessment...</div>
+                    <div class="loading-status">Fetching examination templates...</div>
+                </div>
+            </iframe>
+        </div>
+        
+    </div>
+    
+    <!-- Row 3: Laboratory & Diagnostic Orders -->
+    <div class="two-column">
+        
+        <!-- Form 7: Laboratory Orders - With Nested Lab System -->
+        <div class="form-container orders">
+            <div class="form-header">LABORATORY ORDERS</div>
+            <iframe class="tall-iframe" id="lab-orders-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading laboratory system...</div>
+                    <div class="loading-status">Connecting to lab network...</div>
+                </div>
+            </iframe>
+        </div>
+         
+        <!-- Form 8: Medication Orders - With Nested Pharmacy System -->
+        <div class="form-container orders">
+            <div class="form-header">MEDICATION ORDERS</div>
+            <iframe class="tall-iframe" id="med-orders-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading pharmacy system...</div>
+                    <div class="loading-status">Initializing drug database...</div>
+                </div>
+            </iframe>
+        </div>
+        
+    </div>
+    
+    <!-- Row 4: Additional Clinical Forms -->
+    <div class="form-grid">
+        
+        <!-- Form 9: Pain Assessment -->
+        <div class="form-container">
+            <div class="form-header">PAIN ASSESSMENT</div>
+            <iframe id="pain-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading pain assessment...</div>
+                    <div class="loading-status">Loading assessment scales...</div>
+                </div>
+            </iframe>
+        </div>
+         
+        <!-- Form 10: Allergy & Adverse Reactions -->
+        <div class="form-container">
+            <div class="form-header">ALLERGIES & ADVERSE REACTIONS</div>
+            <iframe id="allergy-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading allergy management...</div>
+                    <div class="loading-status">Checking drug interactions...</div>
+                </div>
+            </iframe>
+        </div>
+         
+        <!-- Form 11: Imaging Orders -->
+        <div class="form-container orders">
+            <div class="form-header">DIAGNOSTIC IMAGING</div>
+            <iframe id="imaging-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading imaging system...</div>
+                    <div class="loading-status">Connecting to radiology...</div>
+                </div>
+            </iframe>
+        </div>
+        
+    </div>
+    
+    <!-- Row 5: Clinical Documentation -->
+    <div class="two-column">
+        
+        <!-- Form 12: Progress Notes -->
+        <div class="form-container">
+            <div class="form-header">PROGRESS NOTES</div>
+            <iframe id="notes-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading documentation system...</div>
+                    <div class="loading-status">Synchronizing patient data...</div>
+                </div>
+            </iframe>
+        </div>
+         
+        <!-- Form 13: Discharge Planning -->
+        <div class="form-container">
+            <div class="form-header">DISCHARGE PLANNING</div>
+            <iframe id="discharge-iframe">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div>Loading discharge planner...</div>
+                    <div class="loading-status">Coordinating care transitions...</div>
+                </div>
+            </iframe>
+        </div>
+        
+    </div>
+    
+    <!-- Summary Footer -->
+    <div style="background:#2c3e50; color:white; padding:15px; margin-top:20px; text-align:center;">
+        <h3>Dense EHR Progressive Loading Environment</h3>
+        <p><strong>Forms:</strong> 13 Major Clinical Forms | <strong>Elements:</strong> 500+ Interactive Components | <strong>Load Strategy:</strong> Dependency-Based Progressive Loading</p>
+        <p>High-performance medical documentation testing environment with realistic network simulation</p>
+    </div>
+
+    <script>
+        // Resource Manager - Simulates limited network bandwidth and concurrent request limits
+        class ResourceManager {
+            constructor() {
+                this.maxConcurrentRequests = 4;
+                this.networkBandwidthKBps = 500; // 500 KB/s simulated bandwidth
+                this.activeRequests = [];
+                this.requestQueue = [];
+                this.totalBytesTransferred = 0;
+                this.updateNetworkStatus();
+            }
+
+            async acquireNetworkSlot(requestSize) {
+                return new Promise((resolve) => {
+                    const request = {
+                        id: Math.random().toString(36).substr(2, 9),
+                        size: requestSize,
+                        resolve: resolve,
+                        startTime: Date.now()
+                    };
+
+                    if (this.activeRequests.length < this.maxConcurrentRequests) {
+                        this.startRequest(request);
+                    } else {
+                        this.requestQueue.push(request);
+                        this.updateNetworkStatus();
+                    }
+                });
+            }
+
+            startRequest(request) {
+                this.activeRequests.push(request);
+                this.updateNetworkStatus();
+                
+                // Simulate bandwidth-limited transfer time
+                const transferTimeMs = (request.size / this.networkBandwidthKBps) * 1000;
+                const jitter = Math.random() * 200; // Add network jitter
+                
+                setTimeout(() => {
+                    this.completeRequest(request);
+                }, transferTimeMs + jitter);
+
+                request.resolve(request.id);
+            }
+
+            completeRequest(request) {
+                this.activeRequests = this.activeRequests.filter(r => r.id !== request.id);
+                this.totalBytesTransferred += request.size;
+                
+                // Start next queued request
+                if (this.requestQueue.length > 0) {
+                    const nextRequest = this.requestQueue.shift();
+                    this.startRequest(nextRequest);
+                }
+                
+                this.updateNetworkStatus();
+            }
+
+            updateNetworkStatus() {
+                const statusEl = document.getElementById('networkStatus');
+                const activeCount = this.activeRequests.length;
+                const queueCount = this.requestQueue.length;
+                
+                if (activeCount === 0 && queueCount === 0) {
+                    statusEl.textContent = 'Network: Idle';
+                    statusEl.className = 'network-status';
+                } else if (queueCount > 0) {
+                    statusEl.textContent = `Network: Busy (${activeCount} active, ${queueCount} queued)`;
+                    statusEl.className = 'network-status busy';
+                } else {
+                    statusEl.textContent = `Network: Active (${activeCount} transfers)`;
+                    statusEl.className = 'network-status busy';
+                }
+            }
+        }
+
+        // Progressive Iframe Loader - Manages loading dependencies and content generation
+        class ProgressiveIframeLoader {
+            constructor(resourceManager) {
+                this.resourceManager = resourceManager;
+                this.loadedIframes = new Set();
+                this.loadingPromises = new Map();
+                this.formTemplates = new Map();
+                this.initializeFormTemplates();
+            }
+
+            initializeFormTemplates() {
+                // Store form templates to simulate "network" content
+                this.formTemplates.set('chief-complaint', {
+                    title: 'Chief Complaint & HPI',
+                    sections: ['Primary complaint', 'Pain assessment', 'Associated symptoms'],
+                    fields: ['complaint', 'onset', 'duration', 'quality', 'location', 'severity'],
+                    size: 45 // KB
+                });
+
+                this.formTemplates.set('vital-signs', {
+                    title: 'Vital Signs Monitor',
+                    sections: ['Primary vitals', 'Additional measurements', 'Live monitoring'],
+                    fields: ['bp_systolic', 'bp_diastolic', 'heart_rate', 'resp_rate', 'temperature', 'o2_sat'],
+                    size: 65, // KB (larger due to nested monitor)
+                    hasNestedContent: true
+                });
+
+                this.formTemplates.set('cardio', {
+                    title: 'Cardiovascular Assessment',
+                    sections: ['Heart rate & rhythm', 'Heart sounds', 'Peripheral assessment'],
+                    fields: ['heart_rate', 'rhythm', 's1_normal', 's2_normal', 'murmur', 'pulses'],
+                    size: 38 // KB
+                });
+
+                this.formTemplates.set('pulmonary', {
+                    title: 'Pulmonary Assessment', 
+                    sections: ['Respiratory effort', 'Lung sounds', 'Other findings'],
+                    fields: ['dyspnea_rest', 'dyspnea_exertion', 'lung_sounds', 'cough_type'],
+                    size: 35 // KB
+                });
+
+                this.formTemplates.set('neuro', {
+                    title: 'Neurological Assessment',
+                    sections: ['Mental status', 'Neurological exam'],
+                    fields: ['gcs', 'orientation', 'pupils', 'strength', 'reflexes'],
+                    size: 42 // KB
+                });
+
+                this.formTemplates.set('gi', {
+                    title: 'Gastrointestinal Exam',
+                    sections: ['GI symptoms', 'Abdominal examination'],
+                    fields: ['nausea', 'vomiting', 'abdominal_exam', 'bowel_sounds'],
+                    size: 33 // KB
+                });
+
+                this.formTemplates.set('lab-orders', {
+                    title: 'Laboratory Orders',
+                    sections: ['CBC', 'BMP', 'Cardiac markers', 'Other tests'],
+                    fields: ['cbc_ordered', 'bmp_ordered', 'cardiac_markers', 'priority'],
+                    size: 85, // KB (large due to nested lab system)
+                    hasNestedContent: true
+                });
+
+                this.formTemplates.set('med-orders', {
+                    title: 'Medication Orders',
+                    sections: ['New prescription', 'Safety checks'],
+                    fields: ['medication', 'dose', 'route', 'frequency', 'interactions'],
+                    size: 75, // KB (large due to drug interaction system)
+                    hasNestedContent: true
+                });
+
+                this.formTemplates.set('pain', {
+                    title: 'Pain Assessment',
+                    sections: ['Pain characteristics', 'Quality', 'Factors'],
+                    fields: ['pain_scale', 'location', 'quality', 'aggravating', 'relieving'],
+                    size: 28 // KB
+                });
+
+                this.formTemplates.set('allergy', {
+                    title: 'Allergies & Adverse Reactions',
+                    sections: ['New allergy entry', 'Reaction symptoms'],
+                    fields: ['allergen', 'type', 'severity', 'symptoms'],
+                    size: 31 // KB
+                });
+
+                this.formTemplates.set('imaging', {
+                    title: 'Diagnostic Imaging',
+                    sections: ['Imaging studies', 'Contrast options'],
+                    fields: ['study_type', 'contrast', 'indication', 'priority'],
+                    size: 25 // KB
+                });
+
+                this.formTemplates.set('notes', {
+                    title: 'Progress Notes',
+                    sections: ['SOAP format', 'Provider information'],
+                    fields: ['subjective', 'objective', 'assessment', 'plan', 'provider'],
+                    size: 22 // KB
+                });
+
+                this.formTemplates.set('discharge', {
+                    title: 'Discharge Planning', 
+                    sections: ['Discharge info', 'Medications', 'Follow-up', 'Education'],
+                    fields: ['disposition', 'medications', 'followup', 'education'],
+                    size: 36 // KB
+                });
+            }
+
+            async simulateNetworkCall(description, sizeKB, baseDelay = 300) {
+                // Acquire network slot (this creates contention between parallel agents)
+                const requestId = await this.resourceManager.acquireNetworkSlot(sizeKB);
+                
+                // Simulate actual data transfer with realistic delays
+                const networkDelay = baseDelay + (Math.random() * 400); // 300-700ms base + jitter
+                await new Promise(resolve => setTimeout(resolve, networkDelay));
+                
+                // Generate realistic payload to simulate memory usage
+                const payload = this.generateRealisticPayload(sizeKB);
+                
+                return {
+                    requestId,
+                    data: payload,
+                    size: sizeKB,
+                    description
+                };
+            }
+
+            generateRealisticPayload(sizeKB) {
+                // Generate payload that actually uses memory (arrays, objects, strings)
+                const targetSize = sizeKB * 1024;
+                const chunks = [];
+                let currentSize = 0;
+                
+                while (currentSize < targetSize) {
+                    const chunk = {
+                        id: Math.random().toString(36),
+                        timestamp: Date.now(),
+                        data: 'x'.repeat(Math.min(1000, targetSize - currentSize)),
+                        metadata: {
+                            version: '1.0',
+                            type: 'medical_form_data',
+                            checksum: Math.random().toString(16)
+                        }
+                    };
+                    chunks.push(chunk);
+                    currentSize += JSON.stringify(chunk).length;
+                }
+                
+                return chunks;
+            }
+
+            async loadIframe(iframeId, dependencies = []) {
+                if (this.loadedIframes.has(iframeId)) {
+                    return;
+                }
+
+                // Prevent duplicate loading
+                if (this.loadingPromises.has(iframeId)) {
+                    return this.loadingPromises.get(iframeId);
+                }
+
+                const loadPromise = this._doLoadIframe(iframeId, dependencies);
+                this.loadingPromises.set(iframeId, loadPromise);
+                
+                try {
+                    await loadPromise;
+                } finally {
+                    this.loadingPromises.delete(iframeId);
+                }
+            }
+
+            async _doLoadIframe(iframeId, dependencies) {
+                // Wait for dependencies
+                await Promise.all(dependencies.map(dep => this.waitForLoad(dep)));
+                
+                // Update loading status
+                this.updateLoadingStatus(iframeId, 'Loading dependencies...');
+                
+                const templateKey = iframeId.replace('-iframe', '');
+                const template = this.formTemplates.get(templateKey);
+                
+                if (!template) {
+                    console.error(`No template found for ${templateKey}`);
+                    return;
+                }
+
+                // Simulate multiple network calls for realistic loading
+                this.updateLoadingStatus(iframeId, 'Fetching form structure...');
+                const formStructure = await this.simulateNetworkCall(
+                    `Form structure for ${template.title}`, 
+                    Math.floor(template.size * 0.3)
+                );
+
+                this.updateLoadingStatus(iframeId, 'Loading validation rules...');
+                const validationRules = await this.simulateNetworkCall(
+                    `Validation rules for ${template.title}`,
+                    Math.floor(template.size * 0.2)
+                );
+
+                this.updateLoadingStatus(iframeId, 'Applying styling...');
+                const styleData = await this.simulateNetworkCall(
+                    `Styles for ${template.title}`,
+                    Math.floor(template.size * 0.1)
+                );
+
+                // For forms with nested content, simulate additional heavy loading
+                if (template.hasNestedContent) {
+                    this.updateLoadingStatus(iframeId, 'Loading nested systems...');
+                    await this.simulateNetworkCall(
+                        `Nested content for ${template.title}`,
+                        Math.floor(template.size * 0.4)
+                    );
+                }
+
+                this.updateLoadingStatus(iframeId, 'Rendering form...');
+                
+                // Build and load the actual iframe content
+                const content = this.buildIframeContent(template, formStructure, validationRules, styleData);
+                
+                const iframe = document.getElementById(iframeId);
+                iframe.srcdoc = content;
+                
+                // Mark as loaded
+                this.loadedIframes.add(iframeId);
+                
+                // Simulate final processing delay
+                await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 300));
+            }
+
+            updateLoadingStatus(iframeId, status) {
+                const iframe = document.getElementById(iframeId);
+                const placeholder = iframe.querySelector('.loading-status');
+                if (placeholder) {
+                    placeholder.textContent = status;
+                }
+            }
+
+            async waitForLoad(iframeId) {
+                if (this.loadedIframes.has(iframeId)) {
+                    return;
+                }
+                
+                if (this.loadingPromises.has(iframeId)) {
+                    await this.loadingPromises.get(iframeId);
+                } else {
+                    // Not started loading yet, wait for it to appear
+                    while (!this.loadedIframes.has(iframeId) && !this.loadingPromises.has(iframeId)) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                    if (this.loadingPromises.has(iframeId)) {
+                        await this.loadingPromises.get(iframeId);
+                    }
+                }
+            }
+
+            buildIframeContent(template, formStructure, validationRules, styleData) {
+                // Generate realistic form content based on template
+                const backgroundColors = {
+                    'vital-signs': '#e3f2fd',
+                    'cardio': '#fff3e0', 
+                    'pulmonary': '#fff3e0',
+                    'neuro': '#fff3e0',
+                    'gi': '#fff3e0',
+                    'lab-orders': '#f3e5f5',
+                    'med-orders': '#f3e5f5',
+                    'imaging': '#f3e5f5'
+                };
+
+                const bgColor = backgroundColors[template.title.toLowerCase().replace(/[^a-z]/g, '-')] || '#f8f9fa';
+                
+                return `
+                    <html><head><style>
+                        body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: ${bgColor}; font-size: 11px; line-height: 1.2; }
+                        .form-section { margin-bottom: 8px; }
+                        .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
+                        input, select, textarea { width: 100%; padding: 3px; border: 1px solid #ced4da; border-radius: 2px; font-size: 10px; margin-bottom: 3px; box-sizing: border-box; }
+                        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+                        .input-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; margin-bottom: 4px; }
+                        .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                        .checkbox-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: 4px; }
+                        label { font-size: 9px; display: flex; align-items: center; gap: 2px; }
+                        textarea { height: 40px; resize: vertical; }
+                        button { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 3px; font-size: 10px; cursor: pointer; width: 100%; margin-top: 4px; }
+                        button:active { background: #0056b3; transform: translateY(1px); }
+                        button:hover { background: #0056b3; }
+                        .success { background: #28a745; }
+                        .urgent { background: #dc3545; }
+                        .warning { background: #ffc107; color: #212529; }
+                    </style></head><body>
+                        <form style="background:white; padding:8px; border:1px solid #dee2e6; border-radius:4px;">
+                            ${this.generateFormFields(template)}
+                            ${template.hasNestedContent ? this.generateNestedContent(template) : ''}
+                            <button type="button" onclick="return false;">${this.getButtonText(template.title)}</button>
+                        </form>
+                    </body></html>
+                `;
+            }
+
+            generateFormFields(template) {
+                // Generate realistic form fields based on template
+                const fieldMappings = {
+                    'Chief Complaint & HPI': this.generateChiefComplaintFields,
+                    'Vital Signs Monitor': this.generateVitalSignsFields,
+                    'Cardiovascular Assessment': this.generateCardioFields,
+                    'Pulmonary Assessment': this.generatePulmonaryFields,
+                    'Neurological Assessment': this.generateNeuroFields,
+                    'Gastrointestinal Exam': this.generateGIFields,
+                    'Laboratory Orders': this.generateLabFields,
+                    'Medication Orders': this.generateMedFields,
+                    'Pain Assessment': this.generatePainFields,
+                    'Allergies & Adverse Reactions': this.generateAllergyFields,
+                    'Diagnostic Imaging': this.generateImagingFields,
+                    'Progress Notes': this.generateNotesFields,
+                    'Discharge Planning': this.generateDischargeFields
+                };
+
+                const generator = fieldMappings[template.title];
+                return generator ? generator.call(this) : '<div>Form content loading...</div>';
+            }
+
+            generateChiefComplaintFields() {
+                return `
+                    <div class="form-section">
+                        <input type="text" placeholder="Primary complaint">
+                        <div class="input-row">
+                            <select>
+                                <option value="">Onset</option>
+                                <option>Sudden</option>
+                                <option>Gradual</option>
+                                <option>Progressive</option>
+                            </select>
+                            <input type="text" placeholder="Duration">
+                        </div>
+                        <div class="input-row-3">
+                            <input type="number" placeholder="Pain scale 1-10" min="1" max="10">
+                            <select>
+                                <option value="">Quality</option>
+                                <option>Sharp</option>
+                                <option>Dull</option>
+                                <option>Crushing</option>
+                                <option>Burning</option>
+                                <option>Throbbing</option>
+                            </select>
+                            <select>
+                                <option value="">Location</option>
+                                <option>Chest</option>
+                                <option>Abdomen</option>
+                                <option>Head</option>
+                                <option>Back</option>
+                                <option>Extremities</option>
+                            </select>
+                        </div>
+                        <textarea placeholder="History of present illness"></textarea>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> Radiating pain</label>
+                            <label><input type="checkbox"> Associated nausea</label>
+                            <label><input type="checkbox"> Shortness of breath</label>
+                            <label><input type="checkbox"> Diaphoresis</label>
+                        </div>
+                    </div>
+                `;
+            }
+
+            generateVitalSignsFields() {
+                return `
+                    <div class="section-title">Primary Vitals</div>
+                    <div class="input-row">
+                        <input type="number" placeholder="Systolic BP">
+                        <input type="number" placeholder="Diastolic BP">
+                    </div>
+                    <div class="input-row-3">
+                        <input type="number" placeholder="Heart Rate">
+                        <input type="number" placeholder="Resp Rate">
+                        <input type="number" step="0.1" placeholder="Temperature °F">
+                    </div>
+                    <div class="input-row">
+                        <input type="number" placeholder="O2 Saturation %">
+                        <select>
+                            <option value="">O2 Delivery</option>
+                            <option>Room Air</option>
+                            <option>2L Nasal Cannula</option>
+                            <option>4L Nasal Cannula</option>
+                            <option>Non-rebreather</option>
+                            <option>BiPAP</option>
+                        </select>
+                    </div>
+                    <div class="section-title">Additional Measurements</div>
+                    <div class="input-row">
+                        <input type="number" placeholder="Weight (lbs)">
+                        <input type="number" placeholder="Height (inches)">
+                    </div>
+                    <div class="input-row">
+                        <input type="number" step="0.1" placeholder="BMI">
+                        <select>
+                            <option value="">Pain Scale</option>
+                            <option>0 - No pain</option>
+                            <option>1-3 - Mild</option>
+                            <option>4-6 - Moderate</option>
+                            <option>7-10 - Severe</option>
+                        </select>
+                    </div>
+                `;
+            }
+
+            generateCardioFields() {
+                return `
+                    <div class="section-title">Heart Rate & Rhythm</div>
+                    <div class="input-row">
+                        <input type="number" placeholder="Heart Rate (bpm)">
+                        <select>
+                            <option value="">Rhythm</option>
+                            <option>Regular</option>
+                            <option>Irregular</option>
+                            <option>Tachycardic</option>
+                            <option>Bradycardic</option>
+                        </select>
+                    </div>
+                    <div class="section-title">Heart Sounds</div>
+                    <div class="checkbox-grid-3">
+                        <label><input type="checkbox"> S1 Normal</label>
+                        <label><input type="checkbox"> S2 Normal</label>
+                        <label><input type="checkbox"> S3 Gallop</label>
+                        <label><input type="checkbox"> S4 Gallop</label>
+                        <label><input type="checkbox"> Murmur</label>
+                        <label><input type="checkbox"> Rub</label>
+                    </div>
+                    <div class="section-title">Peripheral Assessment</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Pulses 2+ bilateral</label>
+                        <label><input type="checkbox"> Peripheral edema</label>
+                        <label><input type="checkbox"> JVD present</label>
+                        <label><input type="checkbox"> Cyanosis</label>
+                    </div>
+                    <textarea placeholder="Additional cardiovascular findings"></textarea>
+                `;
+            }
+
+            generatePulmonaryFields() {
+                return `
+                    <div class="section-title">Respiratory Effort</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Dyspnea at rest</label>
+                        <label><input type="checkbox"> Dyspnea on exertion</label>
+                        <label><input type="checkbox"> Use of accessory muscles</label>
+                        <label><input type="checkbox"> Retractions</label>
+                    </div>
+                    <div class="section-title">Lung Sounds</div>
+                    <div class="checkbox-grid-3">
+                        <label><input type="checkbox"> Clear bilateral</label>
+                        <label><input type="checkbox"> Wheezes</label>
+                        <label><input type="checkbox"> Rales/Crackles</label>
+                        <label><input type="checkbox"> Rhonchi</label>
+                        <label><input type="checkbox"> Diminished left</label>
+                        <label><input type="checkbox"> Diminished right</label>
+                    </div>
+                    <div class="section-title">Other Findings</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Productive cough</label>
+                        <label><input type="checkbox"> Dry cough</label>
+                        <label><input type="checkbox"> Chest tightness</label>
+                        <label><input type="checkbox"> Pleuritic pain</label>
+                    </div>
+                    <textarea placeholder="Detailed pulmonary examination notes"></textarea>
+                `;
+            }
+
+            generateNeuroFields() {
+                return `
+                    <div class="section-title">Mental Status</div>
+                    <div class="input-row">
+                        <select>
+                            <option value="">Glasgow Coma Scale</option>
+                            <option>15 - Normal</option>
+                            <option>14 - Mild impairment</option>
+                            <option>13 - Mild impairment</option>
+                            <option>12 - Moderate impairment</option>
+                            <option>11 - Moderate impairment</option>
+                            <option>10 - Moderate impairment</option>
+                            <option>9 - Severe impairment</option>
+                            <option>8 - Severe impairment</option>
+                        </select>
+                        <select>
+                            <option value="">Orientation</option>
+                            <option>Alert & Oriented x4</option>
+                            <option>Alert & Oriented x3</option>
+                            <option>Alert & Oriented x2</option>
+                            <option>Alert & Oriented x1</option>
+                            <option>Confused</option>
+                            <option>Lethargic</option>
+                        </select>
+                    </div>
+                    <div class="section-title">Neurological Exam</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> PERRLA</label>
+                        <label><input type="checkbox"> Pupils dilated</label>
+                        <label><input type="checkbox"> Pupils constricted</label>
+                        <label><input type="checkbox"> Unequal pupils</label>
+                    </div>
+                    <div class="checkbox-grid-3">
+                        <label><input type="checkbox"> Strength 5/5 bilateral</label>
+                        <label><input type="checkbox"> Focal weakness</label>
+                        <label><input type="checkbox"> Sensation intact</label>
+                        <label><input type="checkbox"> Numbness/tingling</label>
+                        <label><input type="checkbox"> Reflexes 2+ symmetric</label>
+                        <label><input type="checkbox"> Hyperreflexia</label>
+                    </div>
+                    <textarea placeholder="Neurological examination details"></textarea>
+                `;
+            }
+
+            generateGIFields() {
+                return `
+                    <div class="section-title">GI Symptoms</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Nausea</label>
+                        <label><input type="checkbox"> Vomiting</label>
+                        <label><input type="checkbox"> Diarrhea</label>
+                        <label><input type="checkbox"> Constipation</label>
+                        <label><input type="checkbox"> Abdominal pain</label>
+                        <label><input type="checkbox"> Blood in stool</label>
+                    </div>
+                    <div class="section-title">Abdominal Examination</div>
+                    <div class="checkbox-grid-3">
+                        <label><input type="checkbox"> Soft</label>
+                        <label><input type="checkbox"> Non-tender</label>
+                        <label><input type="checkbox"> Non-distended</label>
+                        <label><input type="checkbox"> Bowel sounds present</label>
+                        <label><input type="checkbox"> Rigid</label>
+                        <label><input type="checkbox"> Guarding</label>
+                        <label><input type="checkbox"> Rebound tenderness</label>
+                        <label><input type="checkbox"> Masses palpable</label>
+                        <label><input type="checkbox"> Hepatomegaly</label>
+                    </div>
+                    <input type="text" placeholder="Last bowel movement">
+                    <textarea placeholder="Abdominal examination findings"></textarea>
+                `;
+            }
+
+            generateLabFields() {
+                return `
+                    <div class="section-title">Complete Blood Count</div>
+                    <div class="checkbox-grid-3">
+                        <label><input type="checkbox"> WBC with differential</label>
+                        <label><input type="checkbox"> Hemoglobin</label>
+                        <label><input type="checkbox"> Hematocrit</label>
+                        <label><input type="checkbox"> Platelet count</label>
+                        <label><input type="checkbox"> RBC count</label>
+                        <label><input type="checkbox"> RBC indices</label>
+                    </div>
+                    <div class="section-title">Basic Metabolic Panel</div>
+                    <div class="checkbox-grid-3">
+                        <label><input type="checkbox"> Glucose</label>
+                        <label><input type="checkbox"> BUN</label>
+                        <label><input type="checkbox"> Creatinine</label>
+                        <label><input type="checkbox"> Sodium</label>
+                        <label><input type="checkbox"> Potassium</label>
+                        <label><input type="checkbox"> Chloride</label>
+                        <label><input type="checkbox"> CO2</label>
+                        <label><input type="checkbox"> eGFR</label>
+                        <label><input type="checkbox"> Anion gap</label>
+                    </div>
+                    <div class="section-title">Cardiac Markers</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Troponin I</label>
+                        <label><input type="checkbox"> CK-MB</label>
+                        <label><input type="checkbox"> BNP</label>
+                        <label><input type="checkbox"> D-Dimer</label>
+                    </div>
+                    <select>
+                        <option value="">Priority Level</option>
+                        <option>STAT</option>
+                        <option>Urgent</option>
+                        <option>Routine</option>
+                        <option>Timed</option>
+                    </select>
+                    <textarea placeholder="Special instructions for laboratory"></textarea>
+                `;
+            }
+
+            generateMedFields() {
+                return `
+                    <div class="section-title">New Prescription</div>
+                    <input type="text" placeholder="Medication name">
+                    <div class="input-row-3">
+                        <input type="text" placeholder="Strength/Dose">
+                        <select>
+                            <option value="">Route</option>
+                            <option>PO (by mouth)</option>
+                            <option>IV (intravenous)</option>
+                            <option>IM (intramuscular)</option>
+                            <option>SL (sublingual)</option>
+                            <option>Topical</option>
+                            <option>Inhaled</option>
+                            <option>PR (rectal)</option>
+                        </select>
+                        <select>
+                            <option value="">Frequency</option>
+                            <option>Once daily</option>
+                            <option>BID (twice daily)</option>
+                            <option>TID (three times daily)</option>
+                            <option>QID (four times daily)</option>
+                            <option>Q4H (every 4 hours)</option>
+                            <option>Q6H (every 6 hours)</option>
+                            <option>Q8H (every 8 hours)</option>
+                            <option>PRN (as needed)</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <input type="number" placeholder="Quantity">
+                        <input type="number" placeholder="Refills">
+                    </div>
+                    <textarea placeholder="Special instructions and patient counseling"></textarea>
+                    <div class="section-title">Safety Checks</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Allergy check completed</label>
+                        <label><input type="checkbox"> Drug interaction reviewed</label>
+                        <label><input type="checkbox"> Renal dosing considered</label>
+                        <label><input type="checkbox"> Generic substitution OK</label>
+                    </div>
+                `;
+            }
+
+            generatePainFields() {
+                return `
+                    <div class="section-title">Pain Characteristics</div>
+                    <div class="input-row">
+                        <select>
+                            <option value="">Pain Scale (0-10)</option>
+                            <option>0 - No pain</option>
+                            <option>1 - Minimal</option>
+                            <option>2 - Mild</option>
+                            <option>3 - Mild</option>
+                            <option>4 - Moderate</option>
+                            <option>5 - Moderate</option>
+                            <option>6 - Moderate</option>
+                            <option>7 - Severe</option>
+                            <option>8 - Severe</option>
+                            <option>9 - Very severe</option>
+                            <option>10 - Worst possible</option>
+                        </select>
+                        <select>
+                            <option value="">Primary Location</option>
+                            <option>Chest</option>
+                            <option>Abdomen</option>
+                            <option>Back</option>
+                            <option>Head/Neck</option>
+                            <option>Arms</option>
+                            <option>Legs</option>
+                            <option>Generalized</option>
+                        </select>
+                    </div>
+                    <div class="section-title">Pain Quality</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Sharp/Stabbing</label>
+                        <label><input type="checkbox"> Dull/Aching</label>
+                        <label><input type="checkbox"> Burning</label>
+                        <label><input type="checkbox"> Throbbing</label>
+                        <label><input type="checkbox"> Cramping</label>
+                        <label><input type="checkbox"> Pressure</label>
+                    </div>
+                    <div class="section-title">Aggravating Factors</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Movement</label>
+                        <label><input type="checkbox"> Deep breathing</label>
+                        <label><input type="checkbox"> Coughing</label>
+                        <label><input type="checkbox"> Position changes</label>
+                        <label><input type="checkbox"> Activity</label>
+                        <label><input type="checkbox"> Stress</label>
+                    </div>
+                    <div class="section-title">Relieving Factors</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Rest</label>
+                        <label><input type="checkbox"> Medication</label>
+                        <label><input type="checkbox"> Heat application</label>
+                        <label><input type="checkbox"> Cold application</label>
+                        <label><input type="checkbox"> Position change</label>
+                        <label><input type="checkbox"> Nothing helps</label>
+                    </div>
+                    <textarea placeholder="Additional pain assessment notes"></textarea>
+                `;
+            }
+
+            generateAllergyFields() {
+                return `
+                    <div class="section-title">New Allergy Entry</div>
+                    <input type="text" placeholder="Allergen (medication, food, environmental)">
+                    <div class="input-row">
+                        <select>
+                            <option value="">Allergy Type</option>
+                            <option>Drug allergy</option>
+                            <option>Food allergy</option>
+                            <option>Environmental</option>
+                            <option>Contact allergy</option>
+                            <option>Latex</option>
+                            <option>Other</option>
+                        </select>
+                        <select>
+                            <option value="">Severity Level</option>
+                            <option>Mild</option>
+                            <option>Moderate</option>
+                            <option>Severe</option>
+                            <option>Life-threatening</option>
+                            <option>Unknown</option>
+                        </select>
+                    </div>
+                    <div class="section-title">Reaction Symptoms</div>
+                    <div class="checkbox-grid-3">
+                        <label><input type="checkbox"> Rash</label>
+                        <label><input type="checkbox"> Hives</label>
+                        <label><input type="checkbox"> Itching</label>
+                        <label><input type="checkbox"> Swelling</label>
+                        <label><input type="checkbox"> Difficulty breathing</label>
+                        <label><input type="checkbox"> Wheezing</label>
+                        <label><input type="checkbox"> Nausea</label>
+                        <label><input type="checkbox"> Vomiting</label>
+                        <label><input type="checkbox"> Diarrhea</label>
+                        <label><input type="checkbox"> Dizziness</label>
+                        <label><input type="checkbox"> Anaphylaxis</label>
+                        <label><input type="checkbox"> Other</label>
+                    </div>
+                    <textarea placeholder="Detailed reaction description and treatment history"></textarea>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Verified with patient</label>
+                        <label><input type="checkbox"> Cross-reactivity considered</label>
+                        <label><input type="checkbox"> EpiPen prescribed</label>
+                        <label><input type="checkbox"> Patient educated</label>
+                    </div>
+                `;
+            }
+
+            generateImagingFields() {
+                return `
+                    <div class="section-title">Imaging Studies</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Chest X-ray</label>
+                        <label><input type="checkbox"> Abdominal X-ray</label>
+                        <label><input type="checkbox"> CT Head</label>
+                        <label><input type="checkbox"> CT Chest</label>
+                        <label><input type="checkbox"> CT Abdomen/Pelvis</label>
+                        <label><input type="checkbox"> MRI Brain</label>
+                        <label><input type="checkbox"> MRI Spine</label>
+                        <label><input type="checkbox"> Ultrasound</label>
+                        <label><input type="checkbox"> Echocardiogram</label>
+                        <label><input type="checkbox"> EKG</label>
+                    </div>
+                    <div class="section-title">Contrast Options</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> With IV contrast</label>
+                        <label><input type="checkbox"> With oral contrast</label>
+                        <label><input type="checkbox"> Without contrast</label>
+                        <label><input type="checkbox"> Contrast allergy protocol</label>
+                    </div>
+                    <input type="text" placeholder="Clinical indication">
+                    <textarea placeholder="Additional imaging instructions"></textarea>
+                    <select>
+                        <option value="">Priority</option>
+                        <option>STAT</option>
+                        <option>Urgent (within 2 hours)</option>
+                        <option>Same day</option>
+                        <option>Routine</option>
+                    </select>
+                `;
+            }
+
+            generateNotesFields() {
+                return `
+                    <div class="section-title">Note Details</div>
+                    <div class="input-row">
+                        <select>
+                            <option value="">Note Type</option>
+                            <option>Progress Note</option>
+                            <option>Consultation Note</option>
+                            <option>Procedure Note</option>
+                            <option>Discharge Summary</option>
+                            <option>Admission Note</option>
+                        </select>
+                        <input type="datetime-local" placeholder="Date/Time">
+                    </div>
+                    <div class="section-title">SOAP Format</div>
+                    <textarea placeholder="Subjective: Patient reports..."></textarea>
+                    <textarea placeholder="Objective: Physical examination reveals..."></textarea>
+                    <textarea placeholder="Assessment: Clinical impression and diagnosis..."></textarea>
+                    <textarea placeholder="Plan: Treatment plan and follow-up..."></textarea>
+                    <div class="section-title">Provider Information</div>
+                    <input type="text" placeholder="Attending physician">
+                    <input type="text" placeholder="Service/Department">
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Attending review completed</label>
+                        <label><input type="checkbox"> Teaching attending note</label>
+                        <label><input type="checkbox"> Addendum required</label>
+                        <label><input type="checkbox"> Cosignature needed</label>
+                    </div>
+                `;
+            }
+
+            generateDischargeFields() {
+                return `
+                    <div class="section-title">Discharge Information</div>
+                    <div class="input-row">
+                        <input type="date" placeholder="Discharge date">
+                        <input type="time" placeholder="Discharge time">
+                    </div>
+                    <select>
+                        <option value="">Discharge Disposition</option>
+                        <option>Home</option>
+                        <option>Home with home health</option>
+                        <option>Skilled nursing facility</option>
+                        <option>Rehabilitation facility</option>
+                        <option>Assisted living</option>
+                        <option>Hospice care</option>
+                        <option>Against medical advice</option>
+                    </select>
+                    <div class="section-title">Discharge Medications</div>
+                    <textarea placeholder="List of discharge medications with instructions"></textarea>
+                    <div class="section-title">Follow-up Care</div>
+                    <textarea placeholder="Follow-up appointments and instructions"></textarea>
+                    <div class="section-title">Patient Education</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Diet restrictions reviewed</label>
+                        <label><input type="checkbox"> Medication teaching completed</label>
+                        <label><input type="checkbox"> Activity limitations discussed</label>
+                        <label><input type="checkbox"> Warning signs reviewed</label>
+                        <label><input type="checkbox"> Equipment training provided</label>
+                        <label><input type="checkbox"> Wound care instructions</label>
+                    </div>
+                    <textarea placeholder="Additional discharge instructions"></textarea>
+                `;
+            }
+
+            generateNestedContent(template) {
+                if (template.title === 'Vital Signs Monitor') {
+                    return `
+                        <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
+                            <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Live Monitor</div>
+                            <iframe height="80" style="width:100%; border:1px solid #999;" srcdoc="
+                                <html><head><style>
+                                    body { margin:4px; font-family:Arial; background:#fff8dc; font-size:9px; }
+                                    .monitor-row { display:flex; justify-content:space-between; margin:2px 0; }
+                                    .alert { background:#ffebee; color:#d32f2f; padding:2px 4px; }
+                                </style></head><body>
+                                    <div class='monitor-row'><span>HR:</span><span>-- bpm</span></div>
+                                    <div class='monitor-row'><span>BP:</span><span>--/-- mmHg</span></div>
+                                    <div class='monitor-row'><span>O2:</span><span>-- %</span></div>
+                                    <div class='alert' style='text-align:center; margin-top:4px;'>Connect Patient Monitor</div>
+                                </body></html>
+                            "></iframe>
+                        </div>
+                    `;
+                }
+                
+                if (template.title === 'Laboratory Orders') {
+                    return `
+                        <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
+                            <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Lab Processing Queue</div>
+                            <iframe height="90" style="width:100%; border:1px solid #999;" srcdoc="
+                                <html><head><style>
+                                    body { margin:4px; font-family:Arial; background:#fffacd; font-size:9px; }
+                                    .queue-item { display:flex; justify-content:space-between; margin:2px 0; padding:2px; background:white; border:1px solid #ddd; }
+                                    .status { color:#28a745; font-weight:bold; }
+                                    .pending { color:#ffc107; }
+                                </style></head><body>
+                                    <div class='queue-item'><span>CBC - Patient A</span><span class='status'>Complete</span></div>
+                                    <div class='queue-item'><span>BMP - Patient B</span><span class='pending'>Processing</span></div>
+                                    <div class='queue-item'><span>Cardiac - Patient C</span><span class='pending'>Pending</span></div>
+                                    <iframe height='25' style='width:100%; border:1px solid #777; margin-top:4px;' srcdoc='
+                                        <html><body style=\"margin:2px; font-size:8px; background:#e8f5e8;\">
+                                            <div style=\"text-align:center;\">Lab Analyzer Status: 🟢 Online</div>
+                                        </body></html>
+                                    '></iframe>
+                                </body></html>
+                            "></iframe>
+                        </div>
+                    `;
+                }
+                
+                if (template.title === 'Medication Orders') {
+                    return `
+                        <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
+                            <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Drug Interaction Alert</div>
+                            <iframe height="70" style="width:100%; border:1px solid #999;" srcdoc="
+                                <html><head><style>
+                                    body { margin:4px; font-family:Arial; background:#fff3cd; font-size:9px; }
+                                    .alert-item { margin:2px 0; padding:2px; background:#f8d7da; border:1px solid #f5c6cb; border-radius:2px; }
+                                    .safe { background:#d4edda; border-color:#c3e6cb; }
+                                </style></head><body>
+                                    <div class='alert-item safe'>✓ No known allergies</div>
+                                    <div class='alert-item safe'>✓ No major interactions</div>
+                                    <div class='alert-item'>⚠ Monitor renal function</div>
+                                </body></html>
+                            "></iframe>
+                        </div>
+                    `;
+                }
+                
+                return '';
+            }
+
+            getButtonText(title) {
+                const buttonTexts = {
+                    'Chief Complaint & HPI': 'Document Chief Complaint',
+                    'Vital Signs Monitor': 'Record Vital Signs',
+                    'Cardiovascular Assessment': 'Save CV Assessment',
+                    'Pulmonary Assessment': 'Document Respiratory',
+                    'Neurological Assessment': 'Save Neuro Exam',
+                    'Gastrointestinal Exam': 'Document GI Exam',
+                    'Laboratory Orders': 'Submit Lab Orders',
+                    'Medication Orders': 'Send to Pharmacy',
+                    'Pain Assessment': 'Document Pain Assessment',
+                    'Allergies & Adverse Reactions': 'Add to Allergy List',
+                    'Diagnostic Imaging': 'Order Imaging',
+                    'Progress Notes': 'Save & Sign Note',
+                    'Discharge Planning': 'Finalize Discharge'
+                };
+                
+                return buttonTexts[title] || 'Save Form';
+            }
+
+            async executeLoadingPlan(plan) {
+                // Execute the loading plan with proper dependency management
+                for (const item of plan) {
+                    // Don't await - start loading in parallel where dependencies allow
+                    this.loadIframe(item.iframe, item.dependencies);
+                }
+            }
+        }
+
+        // Loading Plan with Dependencies
+        const loadingPlan = [
+            // Wave 1: Independent forms (can start immediately)
+            { iframe: 'chief-complaint-iframe', dependencies: [] },
+            { iframe: 'vital-signs-iframe', dependencies: [] },
+            
+            // Wave 2: Forms that depend on vital signs
+            { iframe: 'cardio-iframe', dependencies: ['vital-signs-iframe'] },
+            { iframe: 'pulmonary-iframe', dependencies: ['vital-signs-iframe'] },
+            { iframe: 'neuro-iframe', dependencies: [] },
+            { iframe: 'gi-iframe', dependencies: [] },
+            
+            // Wave 3: Heavy systems that depend on assessments
+            { iframe: 'lab-orders-iframe', dependencies: ['cardio-iframe', 'pulmonary-iframe'] },
+            { iframe: 'med-orders-iframe', dependencies: ['allergy-iframe', 'lab-orders-iframe'] },
+            
+            // Wave 4: Clinical support forms
+            { iframe: 'pain-iframe', dependencies: ['chief-complaint-iframe'] },
+            { iframe: 'allergy-iframe', dependencies: [] },
+            { iframe: 'imaging-iframe', dependencies: ['cardio-iframe', 'pulmonary-iframe'] },
+            
+            // Wave 5: Documentation (depends on clinical data)
+            { iframe: 'notes-iframe', dependencies: ['cardio-iframe', 'pulmonary-iframe', 'neuro-iframe', 'gi-iframe'] },
+            { iframe: 'discharge-iframe', dependencies: ['notes-iframe', 'med-orders-iframe'] }
+        ];
+
+        // Initialize the system when page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Initializing Progressive EHR Loading System...');
+            
+            const resourceManager = new ResourceManager();
+            const loader = new ProgressiveIframeLoader(resourceManager);
+            
+            // Start the progressive loading
+            await loader.executeLoadingPlan(loadingPlan);
+            
+            console.log('Progressive loading initiated. Forms will load based on dependencies and resource availability.');
+        });
+    </script>
+    
+</body>
+</html> 
