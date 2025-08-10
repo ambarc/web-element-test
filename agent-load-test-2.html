@@ -1343,7 +1343,7 @@
                     return `
                         <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
                             <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Live Monitor</div>
-                            <iframe height="80" style="width:100%; border:1px solid #999;" srcdoc="
+                            <iframe id="vital-monitor-nested-iframe" height="80" style="width:100%; border:1px solid #999;" srcdoc="
                                 <html><head><style>
                                     body { margin:4px; font-family:Arial; background:#fff8dc; font-size:9px; }
                                     .monitor-row { display:flex; justify-content:space-between; margin:2px 0; }
@@ -1363,7 +1363,7 @@
                     return `
                         <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
                             <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Lab Processing Queue</div>
-                            <iframe height="90" style="width:100%; border:1px solid #999;" srcdoc="
+                            <iframe id="lab-queue-nested-iframe" height="90" style="width:100%; border:1px solid #999;" srcdoc="
                                 <html><head><style>
                                     body { margin:4px; font-family:Arial; background:#fffacd; font-size:9px; }
                                     .queue-item { display:flex; justify-content:space-between; margin:2px 0; padding:2px; background:white; border:1px solid #ddd; }
@@ -1373,7 +1373,7 @@
                                     <div class='queue-item'><span>CBC - Patient A</span><span class='status'>Complete</span></div>
                                     <div class='queue-item'><span>BMP - Patient B</span><span class='pending'>Processing</span></div>
                                     <div class='queue-item'><span>Cardiac - Patient C</span><span class='pending'>Pending</span></div>
-                                    <iframe height='25' style='width:100%; border:1px solid #777; margin-top:4px;' srcdoc='
+                                    <iframe id='lab-analyzer-double-nested-iframe' height='25' style='width:100%; border:1px solid #777; margin-top:4px;' srcdoc='
                                         <html><body style=\"margin:2px; font-size:8px; background:#e8f5e8;\">
                                             <div style=\"text-align:center;\">Lab Analyzer Status: 🟢 Online</div>
                                         </body></html>
@@ -1388,7 +1388,7 @@
                     return `
                         <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
                             <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Drug Interaction Alert</div>
-                            <iframe height="70" style="width:100%; border:1px solid #999;" srcdoc="
+                            <iframe id="drug-interaction-nested-iframe" height="70" style="width:100%; border:1px solid #999;" srcdoc="
                                 <html><head><style>
                                     body { margin:4px; font-family:Arial; background:#fff3cd; font-size:9px; }
                                     .alert-item { margin:2px 0; padding:2px; background:#f8d7da; border:1px solid #f5c6cb; border-radius:2px; }
