@@ -196,7 +196,7 @@
         <!-- Form 1: Chief Complaint -->
         <div class="form-container">
             <div class="form-header">CHIEF COMPLAINT & HPI</div>
-            <iframe srcdoc='
+            <iframe id="chief-complaint-iframe" srcdoc='
                 <html><head><style>
                     body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; font-size: 11px; line-height: 1.2; }
                     .form-section { margin-bottom: 8px; }
@@ -259,7 +259,7 @@
                 <!-- Form 2: Vital Signs - With Nested Monitor -->
         <div class="form-container vital-signs">
             <div class="form-header">VITAL SIGNS</div>
-            <iframe class="nested-iframe" srcdoc='
+            <iframe id="vital-signs-iframe" class="nested-iframe" srcdoc='
                 <html><head><style>
                     body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #e3f2fd; font-size: 11px; line-height: 1.2; }
                     .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
@@ -296,7 +296,7 @@
                         <!-- Nested Vital Signs Monitor -->
                         <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
                             <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Live Monitor</div>
-                            <iframe height="80" style="width:100%; border:1px solid #999;" srcdoc="
+                            <iframe id="vital-monitor-nested-iframe" height="80" style="width:100%; border:1px solid #999;" srcdoc="
                                 <html><head><style>
                                     body { margin:4px; font-family:Arial; background:#fff8dc; font-size:9px; }
                                     .monitor-row { display:flex; justify-content:space-between; margin:2px 0; }
@@ -334,7 +334,7 @@
                  <!-- Form 3: Cardiovascular Assessment -->
         <div class="form-container assessment">
             <div class="form-header">CARDIOVASCULAR EXAM</div>
-            <iframe srcdoc='
+            <iframe id="cardio-iframe" srcdoc='
                 <html><head><style>
                     body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #fff3e0; font-size: 11px; line-height: 1.2; }
                     .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
@@ -391,7 +391,7 @@
                 <!-- Form 4: Respiratory Assessment -->
         <div class="form-container assessment">
             <div class="form-header">PULMONARY ASSESSMENT</div>
-            <iframe srcdoc='
+            <iframe id="pulmonary-iframe" srcdoc='
                 <html><head><style>
                     body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #fff3e0; font-size: 11px; line-height: 1.2; }
                     .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
@@ -437,7 +437,7 @@
                  <!-- Form 5: Neurological Screen -->
         <div class="form-container assessment">
             <div class="form-header">NEUROLOGICAL ASSESSMENT</div>
-            <iframe srcdoc='
+            <iframe id="neuro-iframe" srcdoc='
                 <html><head><style>
                     body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #fff3e0; font-size: 11px; line-height: 1.2; }
                     .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
@@ -500,7 +500,7 @@
                  <!-- Form 6: Gastrointestinal -->
         <div class="form-container assessment">
             <div class="form-header">GASTROINTESTINAL EXAM</div>
-            <iframe srcdoc='
+            <iframe id="gi-iframe" srcdoc='
                 <html><head><style>
                     body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #fff3e0; font-size: 11px; line-height: 1.2; }
                     .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
@@ -551,7 +551,7 @@
         <!-- Form 7: Laboratory Orders - With Nested Lab System -->
         <div class="form-container orders">
             <div class="form-header">LABORATORY ORDERS</div>
-            <iframe class="tall-iframe" srcdoc='
+            <iframe id="lab-orders-iframe" class="tall-iframe" srcdoc='
                 <html><head><style>
                     body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f3e5f5; font-size: 11px; line-height: 1.2; }
                     .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
@@ -578,7 +578,7 @@
                         <!-- Nested Lab Processing System -->
                         <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
                             <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Lab Processing Queue</div>
-                            <iframe height="90" style="width:100%; border:1px solid #999;" srcdoc="
+                            <iframe id="lab-queue-nested-iframe" height="90" style="width:100%; border:1px solid #999;" srcdoc="
                                 <html><head><style>
                                     body { margin:4px; font-family:Arial; background:#fffacd; font-size:9px; }
                                     .queue-item { display:flex; justify-content:space-between; margin:2px 0; padding:2px; background:white; border:1px solid #ddd; }
@@ -590,7 +590,7 @@
                                     <div class=&#39;queue-item&#39;><span>Cardiac - Patient C</span><span class=&#39;pending&#39;>Pending</span></div>
                                     
                                     <!-- Double nested lab analyzer -->
-                                    <iframe height=&#39;25&#39; style=&#39;width:100%; border:1px solid #777; margin-top:4px;&#39; srcdoc=&#39;
+                                    <iframe id=&#39;lab-analyzer-double-nested-iframe&#39; height=&#39;25&#39; style=&#39;width:100%; border:1px solid #777; margin-top:4px;&#39; srcdoc=&#39;
                                         <html><body style=\"margin:2px; font-size:8px; background:#e8f5e8;\">
                                             <div style=\"text-align:center;\">Lab Analyzer Status: &#128994; Online</div>
                                         </body></html>
@@ -644,7 +644,7 @@
         <!-- Form 8: Medication Orders - With Nested Pharmacy System -->
         <div class="form-container orders">
             <div class="form-header">MEDICATION ORDERS</div>
-            <iframe class="tall-iframe" srcdoc='
+            <iframe id="med-orders-iframe" class="tall-iframe" srcdoc='
                 <html><head><style>
                     body { margin: 8px; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f3e5f5; font-size: 11px; line-height: 1.2; }
                     .section-title { font-weight: bold; color: #495057; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #dee2e6; padding-bottom: 2px; }
@@ -689,7 +689,7 @@
                         <!-- Nested Drug Interaction Checker -->
                         <div style="background:#f8f9fa; padding:6px; margin:8px 0; border:1px solid #ddd;">
                             <div style="font-weight:bold; font-size:9px; margin-bottom:4px;">Drug Interaction Alert</div>
-                            <iframe height="70" style="width:100%; border:1px solid #999;" srcdoc="
+                            <iframe id="drug-interaction-nested-iframe" height="70" style="width:100%; border:1px solid #999;" srcdoc="
                                 <html><head><style>
                                     body { margin:4px; font-family:Arial; background:#fff3cd; font-size:9px; }
                                     .alert-item { margin:2px 0; padding:2px; background:#f8d7da; border:1px solid #f5c6cb; border-radius:2px; }
@@ -728,153 +728,156 @@
         <!-- Form 9: Pain Assessment -->
         <div class="form-container">
             <div class="form-header">PAIN ASSESSMENT</div>
-            <form>
-                <div class="section-title">Pain Characteristics</div>
-                <div class="input-row">
-                    <select>
-                        <option value="">Pain Scale (0-10)</option>
-                        <option>0 - No pain</option>
-                        <option>1 - Minimal</option>
-                        <option>2 - Mild</option>
-                        <option>3 - Mild</option>
-                        <option>4 - Moderate</option>
-                        <option>5 - Moderate</option>
-                        <option>6 - Moderate</option>
-                        <option>7 - Severe</option>
-                        <option>8 - Severe</option>
-                        <option>9 - Very severe</option>
-                        <option>10 - Worst possible</option>
-                    </select>
-                    <select>
-                        <option value="">Primary Location</option>
-                        <option>Chest</option>
-                        <option>Abdomen</option>
-                        <option>Back</option>
-                        <option>Head/Neck</option>
-                        <option>Arms</option>
-                        <option>Legs</option>
-                        <option>Generalized</option>
-                    </select>
-                </div>
-                <div class="section-title">Pain Quality</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Sharp/Stabbing</label>
-                    <label><input type="checkbox"> Dull/Aching</label>
-                    <label><input type="checkbox"> Burning</label>
-                    <label><input type="checkbox"> Throbbing</label>
-                    <label><input type="checkbox"> Cramping</label>
-                    <label><input type="checkbox"> Pressure</label>
-                </div>
-                <div class="section-title">Aggravating Factors</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Movement</label>
-                    <label><input type="checkbox"> Deep breathing</label>
-                    <label><input type="checkbox"> Coughing</label>
-                    <label><input type="checkbox"> Position changes</label>
-                    <label><input type="checkbox"> Activity</label>
-                    <label><input type="checkbox"> Stress</label>
-                </div>
-                <div class="section-title">Relieving Factors</div>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Rest</label>
-                    <label><input type="checkbox"> Medication</label>
-                    <label><input type="checkbox"> Heat application</label>
-                    <label><input type="checkbox"> Cold application</label>
-                    <label><input type="checkbox"> Position change</label>
-                    <label><input type="checkbox"> Nothing helps</label>
-                </div>
+            <iframe id="pain-iframe">
+                <form>
+                    <div class="section-title">Pain Characteristics</div>
+                    <div class="input-row">
+                        <select>
+                            <option value="">Pain Scale (0-10)</option>
+                            <option>0 - No pain</option>
+                            <option>1 - Minimal</option>
+                            <option>2 - Mild</option>
+                            <option>3 - Mild</option>
+                            <option>4 - Moderate</option>
+                            <option>5 - Moderate</option>
+                            <option>6 - Moderate</option>
+                            <option>7 - Severe</option>
+                            <option>8 - Severe</option>
+                            <option>9 - Very severe</option>
+                            <option>10 - Worst possible</option>
+                        </select>
+                        <select>
+                            <option value="">Primary Location</option>
+                            <option>Chest</option>
+                            <option>Abdomen</option>
+                            <option>Back</option>
+                            <option>Head/Neck</option>
+                            <option>Arms</option>
+                            <option>Legs</option>
+                            <option>Generalized</option>
+                        </select>
+                    </div>
+                    <div class="section-title">Pain Quality</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Sharp/Stabbing</label>
+                        <label><input type="checkbox"> Dull/Aching</label>
+                        <label><input type="checkbox"> Burning</label>
+                        <label><input type="checkbox"> Throbbing</label>
+                        <label><input type="checkbox"> Cramping</label>
+                        <label><input type="checkbox"> Pressure</label>
+                    </div>
+                    <div class="section-title">Aggravating Factors</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Movement</label>
+                        <label><input type="checkbox"> Deep breathing</label>
+                        <label><input type="checkbox"> Coughing</label>
+                        <label><input type="checkbox"> Position changes</label>
+                        <label><input type="checkbox"> Activity</label>
+                        <label><input type="checkbox"> Stress</label>
+                    </div>
+                    <div class="section-title">Relieving Factors</div>
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Rest</label>
+                        <label><input type="checkbox"> Medication</label>
+                        <label><input type="checkbox"> Heat application</label>
+                        <label><input type="checkbox"> Cold application</label>
+                        <label><input type="checkbox"> Position change</label>
+                        <label><input type="checkbox"> Nothing helps</label>
+                    </div>
                                  <textarea placeholder="Additional pain assessment notes"></textarea>
                  <button type="button" onclick="return false;">Document Pain Assessment</button>
              </form>
-         </div>
+        </div>
          
          <!-- Form 10: Allergy & Adverse Reactions -->
          <div class="form-container">
              <div class="form-header">ALLERGIES & ADVERSE REACTIONS</div>
-             <form>
-                 <div class="section-title">New Allergy Entry</div>
-                 <input type="text" placeholder="Allergen (medication, food, environmental)">
-                 <div class="input-row">
-                     <select>
-                         <option value="">Allergy Type</option>
-                         <option>Drug allergy</option>
-                         <option>Food allergy</option>
-                         <option>Environmental</option>
-                         <option>Contact allergy</option>
-                         <option>Latex</option>
-                         <option>Other</option>
-                     </select>
-                     <select>
-                         <option value="">Severity Level</option>
-                         <option>Mild</option>
-                         <option>Moderate</option>
-                         <option>Severe</option>
-                         <option>Life-threatening</option>
-                         <option>Unknown</option>
-                     </select>
-                 </div>
-                 <div class="section-title">Reaction Symptoms</div>
-                 <div class="checkbox-grid-3">
-                     <label><input type="checkbox"> Rash</label>
-                     <label><input type="checkbox"> Hives</label>
-                     <label><input type="checkbox"> Itching</label>
-                     <label><input type="checkbox"> Swelling</label>
-                     <label><input type="checkbox"> Difficulty breathing</label>
-                     <label><input type="checkbox"> Wheezing</label>
-                     <label><input type="checkbox"> Nausea</label>
-                     <label><input type="checkbox"> Vomiting</label>
-                     <label><input type="checkbox"> Diarrhea</label>
-                     <label><input type="checkbox"> Dizziness</label>
-                     <label><input type="checkbox"> Anaphylaxis</label>
-                     <label><input type="checkbox"> Other</label>
-                 </div>
-                 <textarea placeholder="Detailed reaction description and treatment history"></textarea>
-                 <div class="checkbox-grid">
-                     <label><input type="checkbox"> Verified with patient</label>
-                     <label><input type="checkbox"> Cross-reactivity considered</label>
-                     <label><input type="checkbox"> EpiPen prescribed</label>
-                     <label><input type="checkbox"> Patient educated</label>
-                 </div>
-                 <button type="button" onclick="return false;" class="urgent">Add to Allergy List</button>
-             </form>
-         </div>
+             <iframe id="allergy-iframe">
+                 <form>
+                     <div class="section-title">New Allergy Entry</div>
+                     <input type="text" placeholder="Allergen (medication, food, environmental)">
+                     <div class="input-row">
+                         <select>
+                             <option value="">Allergy Type</option>
+                             <option>Drug allergy</option>
+                             <option>Food allergy</option>
+                             <option>Environmental</option>
+                             <option>Contact allergy</option>
+                             <option>Latex</option>
+                             <option>Other</option>
+                         </select>
+                         <select>
+                             <option value="">Severity Level</option>
+                             <option>Mild</option>
+                             <option>Moderate</option>
+                             <option>Severe</option>
+                             <option>Life-threatening</option>
+                             <option>Unknown</option>
+                         </select>
+                     </div>
+                     <div class="section-title">Reaction Symptoms</div>
+                     <div class="checkbox-grid-3">
+                         <label><input type="checkbox"> Rash</label>
+                         <label><input type="checkbox"> Hives</label>
+                         <label><input type="checkbox"> Itching</label>
+                         <label><input type="checkbox"> Swelling</label>
+                         <label><input type="checkbox"> Difficulty breathing</label>
+                         <label><input type="checkbox"> Wheezing</label>
+                         <label><input type="checkbox"> Nausea</label>
+                         <label><input type="checkbox"> Vomiting</label>
+                         <label><input type="checkbox"> Diarrhea</label>
+                         <label><input type="checkbox"> Dizziness</label>
+                         <label><input type="checkbox"> Anaphylaxis</label>
+                         <label><input type="checkbox"> Other</label>
+                     </div>
+                     <textarea placeholder="Detailed reaction description and treatment history"></textarea>
+                     <div class="checkbox-grid">
+                         <label><input type="checkbox"> Verified with patient</label>
+                         <label><input type="checkbox"> Cross-reactivity considered</label>
+                         <label><input type="checkbox"> EpiPen prescribed</label>
+                         <label><input type="checkbox"> Patient educated</label>
+                     </div>
+                     <button type="button" onclick="return false;" class="urgent">Add to Allergy List</button>
+                 </form>
+            </div>
          
          <!-- Form 11: Imaging Orders -->
          <div class="form-container orders">
              <div class="form-header">DIAGNOSTIC IMAGING</div>
-             <form>
-                 <div class="section-title">Imaging Studies</div>
-                 <div class="checkbox-grid">
-                     <label><input type="checkbox"> Chest X-ray</label>
-                     <label><input type="checkbox"> Abdominal X-ray</label>
-                     <label><input type="checkbox"> CT Head</label>
-                     <label><input type="checkbox"> CT Chest</label>
-                     <label><input type="checkbox"> CT Abdomen/Pelvis</label>
-                     <label><input type="checkbox"> MRI Brain</label>
-                     <label><input type="checkbox"> MRI Spine</label>
-                     <label><input type="checkbox"> Ultrasound</label>
-                     <label><input type="checkbox"> Echocardiogram</label>
-                     <label><input type="checkbox"> EKG</label>
-                 </div>
-                 <div class="section-title">Contrast Options</div>
-                 <div class="checkbox-grid">
-                     <label><input type="checkbox"> With IV contrast</label>
-                     <label><input type="checkbox"> With oral contrast</label>
-                     <label><input type="checkbox"> Without contrast</label>
-                     <label><input type="checkbox"> Contrast allergy protocol</label>
-                 </div>
-                 <input type="text" placeholder="Clinical indication">
-                 <textarea placeholder="Additional imaging instructions"></textarea>
-                 <select>
-                     <option value="">Priority</option>
-                     <option>STAT</option>
-                     <option>Urgent (within 2 hours)</option>
-                     <option>Same day</option>
-                     <option>Routine</option>
-                 </select>
-                 <button type="button" onclick="return false;" class="warning">Order Imaging</button>
-            </form>
-        </div>
+             <iframe id="imaging-iframe">
+                 <form>
+                     <div class="section-title">Imaging Studies</div>
+                     <div class="checkbox-grid">
+                         <label><input type="checkbox"> Chest X-ray</label>
+                         <label><input type="checkbox"> Abdominal X-ray</label>
+                         <label><input type="checkbox"> CT Head</label>
+                         <label><input type="checkbox"> CT Chest</label>
+                         <label><input type="checkbox"> CT Abdomen/Pelvis</label>
+                         <label><input type="checkbox"> MRI Brain</label>
+                         <label><input type="checkbox"> MRI Spine</label>
+                         <label><input type="checkbox"> Ultrasound</label>
+                         <label><input type="checkbox"> Echocardiogram</label>
+                         <label><input type="checkbox"> EKG</label>
+                     </div>
+                     <div class="section-title">Contrast Options</div>
+                     <div class="checkbox-grid">
+                         <label><input type="checkbox"> With IV contrast</label>
+                         <label><input type="checkbox"> With oral contrast</label>
+                         <label><input type="checkbox"> Without contrast</label>
+                         <label><input type="checkbox"> Contrast allergy protocol</label>
+                     </div>
+                     <input type="text" placeholder="Clinical indication">
+                     <textarea placeholder="Additional imaging instructions"></textarea>
+                     <select>
+                         <option value="">Priority</option>
+                         <option>STAT</option>
+                         <option>Urgent (within 2 hours)</option>
+                         <option>Same day</option>
+                         <option>Routine</option>
+                     </select>
+                     <button type="button" onclick="return false;" class="warning">Order Imaging</button>
+                </form>
+            </div>
         
     </div>
     
@@ -884,73 +887,75 @@
         <!-- Form 12: Progress Notes -->
         <div class="form-container">
             <div class="form-header">PROGRESS NOTES</div>
-            <form>
-                <div class="section-title">Note Details</div>
-                <div class="input-row">
-                    <select>
-                        <option value="">Note Type</option>
-                        <option>Progress Note</option>
-                        <option>Consultation Note</option>
-                        <option>Procedure Note</option>
-                        <option>Discharge Summary</option>
-                        <option>Admission Note</option>
-                    </select>
-                    <input type="datetime-local" placeholder="Date/Time">
-                </div>
-                <div class="section-title">SOAP Format</div>
-                <textarea placeholder="Subjective: Patient reports..."></textarea>
-                <textarea placeholder="Objective: Physical examination reveals..."></textarea>
-                <textarea placeholder="Assessment: Clinical impression and diagnosis..."></textarea>
-                <textarea placeholder="Plan: Treatment plan and follow-up..."></textarea>
-                <div class="section-title">Provider Information</div>
-                <input type="text" placeholder="Attending physician">
-                <input type="text" placeholder="Service/Department">
-                <div class="checkbox-grid">
-                    <label><input type="checkbox"> Attending review completed</label>
-                    <label><input type="checkbox"> Teaching attending note</label>
-                    <label><input type="checkbox"> Addendum required</label>
-                    <label><input type="checkbox"> Cosignature needed</label>
-                </div>
+            <iframe id="notes-iframe">
+                <form>
+                    <div class="section-title">Note Details</div>
+                    <div class="input-row">
+                        <select>
+                            <option value="">Note Type</option>
+                            <option>Progress Note</option>
+                            <option>Consultation Note</option>
+                            <option>Procedure Note</option>
+                            <option>Discharge Summary</option>
+                            <option>Admission Note</option>
+                        </select>
+                        <input type="datetime-local" placeholder="Date/Time">
+                    </div>
+                    <div class="section-title">SOAP Format</div>
+                    <textarea placeholder="Subjective: Patient reports..."></textarea>
+                    <textarea placeholder="Objective: Physical examination reveals..."></textarea>
+                    <textarea placeholder="Assessment: Clinical impression and diagnosis..."></textarea>
+                    <textarea placeholder="Plan: Treatment plan and follow-up..."></textarea>
+                    <div class="section-title">Provider Information</div>
+                    <input type="text" placeholder="Attending physician">
+                    <input type="text" placeholder="Service/Department">
+                    <div class="checkbox-grid">
+                        <label><input type="checkbox"> Attending review completed</label>
+                        <label><input type="checkbox"> Teaching attending note</label>
+                        <label><input type="checkbox"> Addendum required</label>
+                        <label><input type="checkbox"> Cosignature needed</label>
+                    </div>
                                  <button type="button" onclick="return false;">Save & Sign Note</button>
              </form>
-         </div>
+        </div>
          
          <!-- Form 13: Discharge Planning -->
          <div class="form-container">
              <div class="form-header">DISCHARGE PLANNING</div>
-             <form>
-                 <div class="section-title">Discharge Information</div>
-                 <div class="input-row">
-                     <input type="date" placeholder="Discharge date">
-                     <input type="time" placeholder="Discharge time">
-                 </div>
-                 <select>
-                     <option value="">Discharge Disposition</option>
-                     <option>Home</option>
-                     <option>Home with home health</option>
-                     <option>Skilled nursing facility</option>
-                     <option>Rehabilitation facility</option>
-                     <option>Assisted living</option>
-                     <option>Hospice care</option>
-                     <option>Against medical advice</option>
-                 </select>
-                 <div class="section-title">Discharge Medications</div>
-                 <textarea placeholder="List of discharge medications with instructions"></textarea>
-                 <div class="section-title">Follow-up Care</div>
-                 <textarea placeholder="Follow-up appointments and instructions"></textarea>
-                 <div class="section-title">Patient Education</div>
-                 <div class="checkbox-grid">
-                     <label><input type="checkbox"> Diet restrictions reviewed</label>
-                     <label><input type="checkbox"> Medication teaching completed</label>
-                     <label><input type="checkbox"> Activity limitations discussed</label>
-                     <label><input type="checkbox"> Warning signs reviewed</label>
-                     <label><input type="checkbox"> Equipment training provided</label>
-                     <label><input type="checkbox"> Wound care instructions</label>
-                 </div>
-                 <textarea placeholder="Additional discharge instructions"></textarea>
-                 <button type="button" onclick="return false;" class="success">Finalize Discharge</button>
-            </form>
-        </div>
+             <iframe id="discharge-iframe">
+                 <form>
+                     <div class="section-title">Discharge Information</div>
+                     <div class="input-row">
+                         <input type="date" placeholder="Discharge date">
+                         <input type="time" placeholder="Discharge time">
+                     </div>
+                     <select>
+                         <option value="">Discharge Disposition</option>
+                         <option>Home</option>
+                         <option>Home with home health</option>
+                         <option>Skilled nursing facility</option>
+                         <option>Rehabilitation facility</option>
+                         <option>Assisted living</option>
+                         <option>Hospice care</option>
+                         <option>Against medical advice</option>
+                     </select>
+                     <div class="section-title">Discharge Medications</div>
+                     <textarea placeholder="List of discharge medications with instructions"></textarea>
+                     <div class="section-title">Follow-up Care</div>
+                     <textarea placeholder="Follow-up appointments and instructions"></textarea>
+                     <div class="section-title">Patient Education</div>
+                     <div class="checkbox-grid">
+                         <label><input type="checkbox"> Diet restrictions reviewed</label>
+                         <label><input type="checkbox"> Medication teaching completed</label>
+                         <label><input type="checkbox"> Activity limitations discussed</label>
+                         <label><input type="checkbox"> Warning signs reviewed</label>
+                         <label><input type="checkbox"> Equipment training provided</label>
+                         <label><input type="checkbox"> Wound care instructions</label>
+                     </div>
+                     <textarea placeholder="Additional discharge instructions"></textarea>
+                     <button type="button" onclick="return false;" class="success">Finalize Discharge</button>
+                </form>
+            </div>
         
     </div>
     
