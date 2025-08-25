@@ -463,6 +463,116 @@
         </script>
     </div>
     
+    <!-- Direct frameset embedding (not srcdoc) - mimics complex legacy EHR structure -->
+    <div class="form-container" style="margin-bottom: 10px;">
+        <div class="form-header">EMBEDDED FRAMESET (Direct HTML structure)</div>
+        <div style="height: 350px; border: 1px solid #ccc; position: relative;">
+            <!-- Simulate the complex frameset structure with divs -->
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 100%; display: flex; flex-direction: column;">
+                <!-- Top navigation frame (0 height but still present) -->
+                <div id="top-nav-frame" style="height: 0px; overflow: hidden; background: #f0f0f0; border-bottom: 1px solid #ccc;">
+                    <div style="padding: 2px; font-size: 8px;">Hidden top nav content</div>
+                </div>
+                
+                <!-- Main content area -->
+                <div style="flex: 1; display: flex;">
+                    <!-- Left navigation (0 width) -->
+                    <div id="left-nav-frame" style="width: 0px; overflow: hidden; background: #e9ecef; border-right: 1px solid #ccc;">
+                        <div style="padding: 2px; font-size: 8px; writing-mode: vertical-lr;">Nav</div>
+                    </div>
+                    
+                    <!-- Main content frame -->
+                    <div id="main-content-frame" style="flex: 1; position: relative; background: white;">
+                        <!-- Widget container overlay -->
+                        <div id="widget-container" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 10;">
+                            <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,123,255,0.1); padding: 4px; border-radius: 3px; font-size: 9px; pointer-events: all;">
+                                Widget Overlay
+                                <button style="margin-left: 4px; font-size: 8px; padding: 1px 3px;">×</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Apps drawer container -->
+                        <div id="apps-drawer-container" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none;">
+                            <!-- Telehealth container -->
+                            <div id="telehealth-container" style="position: absolute; top: 20px; left: 20px; width: 200px; background: white; border: 1px solid #ddd; padding: 8px; pointer-events: all;">
+                                <div style="font-weight: bold; font-size: 10px; margin-bottom: 6px;">Telehealth</div>
+                                <div id="frameContentWrapper" style="background: #f8f9fa; padding: 4px; border: 1px solid #e9ecef;">
+                                    <div id="frPrintWrapper" style="margin-bottom: 4px;">
+                                        <button class="print-btn" style="font-size: 9px; padding: 2px 6px;">Print</button>
+                                    </div>
+                                    <div id="framesetScheduleNavWrapper" style="border: 1px solid #ccc; height: 60px; overflow: hidden;">
+                                        <div style="padding: 4px; font-size: 9px;">
+                                            <div>Schedule Navigation</div>
+                                            <select style="width: 100%; font-size: 8px; margin-top: 2px;">
+                                                <option>Select appointment...</option>
+                                                <option>Dr. Smith - 2:00 PM</option>
+                                                <option>Dr. Johnson - 3:30 PM</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Content separator -->
+                            <div id="contentseparator" style="position: absolute; top: 100px; left: 240px; width: 2px; height: 100px; background: #dee2e6;"></div>
+                            
+                            <!-- Ghost separator -->
+                            <div id="ghostseparator" style="position: absolute; top: 100px; left: 250px; width: 1px; height: 100px; background: #f8f9fa;"></div>
+                            
+                            <!-- Main wrapper -->
+                            <div id="frMainWrapper" style="position: absolute; top: 50px; left: 260px; right: 20px; bottom: 20px; border: 1px solid #ccc;">
+                                <!-- Frame content with cross-frame events -->
+                                <div style="height: 100%; overflow: auto; padding: 8px;">
+                                    <div style="font-weight: bold; margin-bottom: 8px;">Main Application Frame</div>
+                                    
+                                    <!-- Patient info popup trigger -->
+                                    <div class="informational-alert-popup" style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 6px; margin-bottom: 8px; cursor: pointer;" 
+                                         onclick="this.style.background='#d1ecf1'; console.log('Alert popup clicked');">
+                                        📋 Patient Information Alert (Click to expand)
+                                    </div>
+                                    
+                                    <!-- Page layout with classic frameset structure -->
+                                    <div id="page-layout" class="page-layout-encounter page-layout-classic-frameset">
+                                        <div id="page-body" class="page-body-classic-frameset">
+                                            <!-- Auto-start data view -->
+                                            <div class="autostart" data-view-classes="conflict-resolution" style="margin-bottom: 8px;">
+                                                <div style="font-weight: bold; font-size: 10px; margin-bottom: 4px;">Conflict Resolution</div>
+                                                <button style="font-size: 9px; padding: 3px 8px; margin-right: 4px;">Resolve</button>
+                                                <button style="font-size: 9px; padding: 3px 8px;">Dismiss</button>
+                                            </div>
+                                            
+                                            <!-- Closed encounter alert -->
+                                            <div class="autostart" data-view-classes="closed-encounter-alert" style="background: #f8d7da; border: 1px solid #f5c6cb; padding: 6px; margin-bottom: 8px;">
+                                                <div style="font-size: 10px; color: #721c24;">⚠️ Encounter Closed</div>
+                                            </div>
+                                            
+                                            <!-- Briefing autostart -->
+                                            <div class="briefing autostart sticky-container" data-view-classes="briefing" style="background: #e2e3e5; border: 1px solid #d6d8db; padding: 6px;">
+                                                <div class="alert-popup-container autostart user-tracking-alert" style="margin-bottom: 4px;">
+                                                    <div class="user-tracking-alert" style="font-size: 9px; color: #6c757d;">User tracking active</div>
+                                                </div>
+                                                <div style="font-weight: bold; font-size: 10px;">Patient Briefing</div>
+                                                <input type="text" placeholder="Add briefing notes..." style="width: 100%; font-size: 9px; padding: 2px; margin-top: 4px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bottom frame (0 height) -->
+                <div id="bottom-frame" style="height: 0px; overflow: hidden; background: #f0f0f0; border-top: 1px solid #ccc;">
+                    <div style="padding: 2px; font-size: 8px;">Hidden footer content</div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:6px; font-size:10px; color:#555;">
+            Direct frameset structure with nested containers, overlays, and complex data-view-classes. Tests deep nesting and zero-sized frame handling.
+        </div>
+    </div>
+    
     <!-- Row 1: Primary Assessment Forms -->
     <div class="form-grid">
         
