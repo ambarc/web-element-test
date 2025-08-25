@@ -369,6 +369,100 @@
         </div>
     </div>
     
+    <!-- Shadow DOM test case: table with delegated row clicks -->
+    <div class="form-container" style="margin-bottom: 10px;">
+        <div class="form-header">SHADOW DOM TABLE (Delegated clicks)</div>
+        <div id="shadow-host" style="height: 200px; border: 1px solid #ccc; padding: 8px;">
+            <!-- Shadow DOM content will be injected here -->
+        </div>
+        <div style="padding:6px; font-size:10px; color:#555;">
+            Shadow DOM with table cells using delegated click handlers. Agents must traverse shadow roots and detect row-level interactivity.
+        </div>
+        <script>
+            // Create shadow DOM with table that has delegated clicks
+            const shadowHost = document.getElementById('shadow-host');
+            const shadowRoot = shadowHost.attachShadow({mode: 'open'});
+            
+            shadowRoot.innerHTML = `
+                <style>
+                    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+                    tr { cursor: pointer; }
+                    tr:hover { background: #f0f0f0; }
+                    td { padding: 6px; border: 1px solid #ddd; }
+                    th { padding: 6px; border: 1px solid #ddd; background: #e9ecef; font-weight: bold; }
+                    .selected { background: #e3f2fd; }
+                    button { font-size: 10px; padding: 3px 8px; margin: 2px; border: 1px solid #ccc; border-radius: 3px; cursor: pointer; }
+                    .btn-edit { background: #007bff; color: white; border-color: #0056b3; }
+                    .btn-contact { background: #28a745; color: white; border-color: #1e7e34; }
+                    button:hover { opacity: 0.8; }
+                </style>
+                <table role="table" id="shadow-table">
+                    <thead>
+                        <tr role="row">
+                            <th role="columnheader">Provider Type</th>
+                            <th role="columnheader">Name</th>
+                            <th role="columnheader">Status</th>
+                            <th role="columnheader">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr role="row" tabindex="0" data-id="prov1">
+                            <td role="cell" class="table_providerType__abc123">Primary</td>
+                            <td role="cell" class="table_name__def456">Dr. Smith</td>
+                            <td role="cell" class="table_status__ghi789">Active</td>
+                            <td role="cell" class="table_actions__jkl012">
+                                <button class="btn-edit" data-action="edit">Edit</button>
+                                <button class="btn-contact" data-action="contact">Contact</button>
+                            </td>
+                        </tr>
+                        <tr role="row" tabindex="0" data-id="prov2">
+                            <td role="cell" class="table_providerType__abc123">Specialist</td>
+                            <td role="cell" class="table_name__def456">Dr. Johnson</td>
+                            <td role="cell" class="table_status__ghi789">Available</td>
+                            <td role="cell" class="table_actions__jkl012">
+                                <button class="btn-edit" data-action="edit">Edit</button>
+                                <button class="btn-contact" data-action="contact">Contact</button>
+                            </td>
+                        </tr>
+                        <tr role="row" tabindex="0" data-id="prov3">
+                            <td role="cell" class="table_providerType__abc123">Emergency</td>
+                            <td role="cell" class="table_name__def456">Dr. Williams</td>
+                            <td role="cell" class="table_status__ghi789">On Call</td>
+                            <td role="cell" class="table_actions__jkl012">
+                                <button class="btn-edit" data-action="edit">Edit</button>
+                                <button class="btn-contact" data-action="contact">Contact</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            // Add delegated click handler on table (not individual cells)
+            const table = shadowRoot.getElementById('shadow-table');
+            table.addEventListener('click', function(e) {
+                // Handle button clicks
+                if (e.target.tagName === 'BUTTON') {
+                    e.stopPropagation(); // Prevent row selection
+                    const action = e.target.dataset.action;
+                    const row = e.target.closest('tr[data-id]');
+                    const providerId = row ? row.dataset.id : 'unknown';
+                    console.log(`Button clicked: ${action} for provider ${providerId}`);
+                    return;
+                }
+                
+                // Handle row clicks
+                const row = e.target.closest('tr[data-id]');
+                if (row) {
+                    // Remove previous selection
+                    shadowRoot.querySelectorAll('tr.selected').forEach(r => r.classList.remove('selected'));
+                    // Select clicked row
+                    row.classList.add('selected');
+                    console.log('Selected provider:', row.dataset.id);
+                }
+            });
+        </script>
+    </div>
+    
     <!-- Row 1: Primary Assessment Forms -->
     <div class="form-grid">
         
