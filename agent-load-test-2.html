@@ -334,6 +334,41 @@
         <div style="font-size: 9px; margin-top: 5px; color: #e9ecef;">⚡ Forms load on demand - Click any form to activate • 50% slower network simulation</div>
     </div>
     
+    <!-- Legacy shell: same-origin frameset with zero-sized rows/cols and fully populated main frame -->
+    <div class="form-container" style="margin-bottom: 10px;">
+        <div class="form-header">LEGACY SHELL (Same-origin frameset)</div>
+        <iframe id="legacy-shell" name="legacyShell"
+                sandbox="allow-scripts allow-forms allow-same-origin"
+                style="width:100%; height:320px; border:1px solid #ccc;"
+                srcdoc="<!DOCTYPE html>
+<html><head><meta charset='utf-8'>
+  <style>html, frameset, frame { border:0; }</style>
+  <script>
+    window.addEventListener('load', function () {
+      var f = frames['mainA'];
+      if (!f) return;
+      var d = f.document;
+      d.open();
+      d.write('<!DOCTYPE html><html><head><meta charset=\'utf-8\'><style> body { margin:0; overflow:hidden; font: 11px Segoe UI, sans-serif; } #layer { position:absolute; inset:0; pointer-events:none; } .panel { border:1px solid #dee2e6; padding:6px; margin:6px; background:#fff; } </style></head><body><div id=\'layer\'></div><div class=\'panel\'><div style=\'font-weight:bold; margin-bottom:4px;\'>Main Frame Content</div><input placeholder=\'Input inside mainA\'><select><option value=\'\'>Choose…</option><option>A</option><option>B</option></select><div id=\'rowClick\' style=\'padding:6px; border:1px dashed #ccc; cursor:pointer;\'>Clickable Row (handler on parent)<button style=\'margin-left:6px;\'>Child Button</button></div><script>document.getElementById(\\\'rowClick\\\').addEventListener(\\\'click\\\', function(){});<\\/script></div></body></html>');
+      d.close();
+    });
+  </script>
+</head>
+<frameset rows='0,*,0' frameborder='0' framespacing='0' border='0'>
+  <frame name='tipA' src='about:blank' scrolling='no' noresize>
+  <frameset cols='0,*' frameborder='0' framespacing='0' border='0'>
+    <frame name='navA' src='about:blank' scrolling='no' noresize>
+    <frame name='mainA' src='about:blank' scrolling='auto'>
+  </frameset>
+  <frame name='footA' src='about:blank' scrolling='no' noresize>
+</frameset>
+</html>">
+        </iframe>
+        <div style="padding:6px; font-size:10px; color:#555;">
+            Same-origin frameset; fully populated on load. Parent container has a click handler to test parent-vs-child interactivity logic.
+        </div>
+    </div>
+    
     <!-- Row 1: Primary Assessment Forms -->
     <div class="form-grid">
         
@@ -1800,11 +1835,18 @@
             });
         }
 
-        // Create massive memory bloat similar to heap snapshot (300MB+) - 2x faster growth
+        // Create controlled memory bloat - 5MB per interaction, cap at 100MB
         function createMemoryBloat() {
-            // Create large string objects (like the 96MB of strings in heap) - 2x more strings
-            const largeString = 'x'.repeat(1024 * 200); // 200KB string per iteration
-            for (let i = 0; i < 20; i++) { // 50% reduction: 40 -> 20
+            // Check if we're approaching the 100MB limit
+            const currentMemoryMB = getCurrentMemoryUsageMB();
+            if (currentMemoryMB >= 100) {
+                return; // Stop creating bloat at 100MB
+            }
+            
+            // Target 5MB per interaction
+            // Create string objects (~2MB)
+            const largeString = 'x'.repeat(1024 * 100); // 100KB string per iteration
+            for (let i = 0; i < 20; i++) { // 20 * 100KB = 2MB strings
                 stringCache.push({
                     data: largeString + Math.random(),
                     metadata: JSON.stringify({
@@ -1817,55 +1859,67 @@
                 });
             }
             
-            // Create 2x more complex objects with deep nesting
-            for (let obj = 0; obj < 2; obj++) { // 50% reduction: 4 -> 2
-                const complexObject = {
-                    id: Math.random(),
-                    timestamp: Date.now(),
-                    nestedData: {},
-                    arrays: [],
-                    functions: []
+            // Create 1 complex object (~1MB)
+            const complexObject = {
+                id: Math.random(),
+                timestamp: Date.now(),
+                nestedData: {},
+                arrays: [],
+                functions: []
+            };
+            
+            // Fill with nested data targeting ~1MB
+            for (let i = 0; i < 100; i++) {
+                complexObject.nestedData[`key_${i}`] = {
+                    value: 'x'.repeat(1000), // 1KB per key
+                    subObject: {
+                        data: new Array(50).fill(0).map(() => Math.random()),
+                        metadata: { created: Date.now(), index: i }
+                    }
                 };
-                
-                // Fill with nested data (like CSSStyleRule objects in heap) - 2x more data
-                for (let i = 0; i < 400; i++) { // 50% reduction: 800 -> 400
-                    complexObject.nestedData[`key_${i}`] = {
-                        value: 'x'.repeat(2000),
-                        subObject: {
-                            data: new Array(100).fill(0).map(() => Math.random()),
-                            metadata: { created: Date.now(), index: i }
-                        }
-                    };
-                    complexObject.arrays.push(new Array(200).fill(0).map(() => ({
-                        id: Math.random(),
-                        data: 'content_' + i + '_' + Math.random()
-                    })));
-                }
-                
-                objectCache.push(complexObject);
+                complexObject.arrays.push(new Array(100).fill(0).map(() => ({
+                    id: Math.random(),
+                    data: 'content_' + i + '_' + Math.random()
+                })));
             }
             
-            // Create 2x DOM bloat containers
-            for (let d = 0; d < 2; d++) { // 50% reduction: 4 -> 2
-                createDOMBloat();
-            }
+            objectCache.push(complexObject);
             
-            // Create 2x CSS bloat stylesheets
-            for (let c = 0; c < 2; c++) { // 50% reduction: 4 -> 2
-                createCSSBloat();
-            }
+            // Create 1 DOM bloat container (~1MB)
+            createDOMBloat();
+            
+            // Create 1 CSS bloat stylesheet (~1MB)
+            createCSSBloat();
+        }
+
+        // Calculate current memory usage in MB
+        function getCurrentMemoryUsageMB() {
+            const totalImages = imageCache.length;
+            const imageSizeKB = imageCache.reduce((sum, cached) => sum + cached.sizeKB, 0);
+            
+            const stringCount = stringCache.length;
+            const stringSizeKB = stringCache.reduce((sum, cached) => sum + (cached.data.length / 1024), 0);
+            
+            const objectCount = objectCache.length;
+            const objectSizeKB = objectCount * 1000; // 1MB per object
+            
+            const domCount = domCache.length;
+            const domSizeKB = domCount * 1000; // 1MB per DOM container
+            
+            const totalSizeKB = imageSizeKB + stringSizeKB + objectSizeKB + domSizeKB;
+            return totalSizeKB / 1024;
         }
 
         function generateFakeFormData() {
-            const fields = ['firstName', 'lastName', 'email', 'address', 'city', 'state', 'zip', 'phone', 'notes', 'history'];
+            const fields = ['firstName', 'lastName', 'email', 'address', 'city'];
             const data = {};
             fields.forEach(field => {
-                data[field] = 'x'.repeat(Math.floor(Math.random() * 4000) + 2000); // 50% reduction: 2-6KB per field
+                data[field] = 'x'.repeat(Math.floor(Math.random() * 200) + 100); // Small: 100-300B per field
             });
-            data.history = new Array(200).fill(0).map(() => ({ // 50% reduction: 400 -> 200
+            data.history = new Array(20).fill(0).map(() => ({ // Reduced: 20 items
                 action: 'fieldChange',
                 timestamp: Date.now() - Math.random() * 1000000,
-                data: 'x'.repeat(2000) // 50% reduction: 4000 -> 2000
+                data: 'x'.repeat(100) // Small: 100B per item
             }));
             return data;
         }
@@ -1874,48 +1928,45 @@
             return {
                 sessionId: 'session_' + Math.random(),
                 startTime: Date.now() - Math.random() * 1000000,
-                interactions: new Array(1000).fill(0).map(() => ({ // 50% reduction: 2000 -> 1000
+                interactions: new Array(50).fill(0).map(() => ({ // Small: 50 interactions
                     type: 'click',
                     target: 'element_' + Math.random(),
                     timestamp: Date.now() - Math.random() * 1000000,
-                    payload: 'x'.repeat(1000) // 50% reduction: 2000 -> 1000
+                    payload: 'x'.repeat(100) // Small: 100B payload
                 })),
-                formStates: new Array(100).fill(0).map(() => ({ // 50% reduction: 200 -> 100
+                formStates: new Array(5).fill(0).map(() => ({ // Small: 5 form states
                     formId: 'form_' + Math.random(),
-                    state: 'x'.repeat(10000), // 50% reduction: 20000 -> 10000
-                    validationErrors: new Array(40).fill(0).map(() => 'error_' + Math.random()) // 50% reduction: 80 -> 40
+                    state: 'x'.repeat(500), // Small: 500B state
+                    validationErrors: new Array(3).fill(0).map(() => 'error_' + Math.random()) // Small: 3 errors
                 }))
             };
         }
 
         function createDOMBloat() {
-            // Create hidden DOM elements that consume memory (like Window objects in heap)
+            // Create hidden DOM elements targeting ~1MB total
             const container = document.createElement('div');
             container.style.display = 'none';
             container.id = 'memory-bloat-' + Date.now() + '-' + Math.random();
             
-            // Create many nested elements with event listeners (creates closures) - 2x more elements
-            for (let i = 0; i < 200; i++) { // 50% reduction: 400 -> 200
+            // Create elements targeting 1MB total (50 elements * ~20KB each)
+            for (let i = 0; i < 50; i++) {
                 const element = document.createElement('div');
-                element.innerHTML = 'x'.repeat(4000); // 50% reduction: 8000 -> 4000
+                element.innerHTML = 'x'.repeat(10000); // 10KB content per element
                 element.className = 'bloat-element-' + i;
                 element.setAttribute('data-index', i);
                 element.setAttribute('data-timestamp', Date.now());
                 element.setAttribute('data-random', Math.random());
-                element.setAttribute('data-extra-1', 'x'.repeat(500)); // 50% reduction
-                element.setAttribute('data-extra-2', 'x'.repeat(500));
+                element.setAttribute('data-content', 'x'.repeat(5000)); // 5KB attribute
                 
-                // Add event listeners that create closures (retains memory) - reduced to 2 events
-                ['click', 'mouseover'].forEach(eventType => {
-                    element.addEventListener(eventType, function(e) {
-                        const capturedData = {
-                            timestamp: Date.now(),
-                            data: 'x'.repeat(4000), // 50% reduction: 8000 -> 4000
-                            random: Math.random(),
-                            formData: generateFakeFormData()
-                        };
-                        return () => capturedData;
-                    });
+                // Add single event listener with smaller closure
+                element.addEventListener('click', function(e) {
+                    const capturedData = {
+                        timestamp: Date.now(),
+                        data: 'x'.repeat(1000), // 1KB closure data
+                        random: Math.random(),
+                        formData: generateFakeFormData()
+                    };
+                    return () => capturedData;
                 });
                 
                 container.appendChild(element);
@@ -1926,23 +1977,25 @@
         }
 
         function createCSSBloat() {
-            // Create dynamic stylesheets (like CSSStyleRule objects in heap) - 2x more rules
+            // Create dynamic stylesheet targeting ~1MB
             const style = document.createElement('style');
             let cssRules = '';
             
-            for (let i = 0; i < 400; i++) { // 50% reduction: 800 -> 400
+            // Target 1MB CSS (100 rules * ~10KB each)
+            for (let i = 0; i < 100; i++) {
                 cssRules += `
                 .dynamic-rule-${i}-${Date.now()}-${Math.random()} {
                     background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="%23${Math.floor(Math.random()*16777215).toString(16)}"/></svg>');
                     color: #${Math.floor(Math.random()*16777215).toString(16)};
                     font-family: "font-${i}-${Math.random()}";
-                    content: "${'x'.repeat(2000)}"; // 50% reduction: 4000 -> 2000
+                    content: "${'x'.repeat(5000)}"; // 5KB content per rule
                     border: 1px solid #${Math.floor(Math.random()*16777215).toString(16)};
                     box-shadow: 0 0 10px #${Math.floor(Math.random()*16777215).toString(16)};
                     animation: anim-${i} 1s infinite;
                 }
                 .dynamic-rule-${i}-${Date.now()}-${Math.random()}:hover {
                     background: #${Math.floor(Math.random()*16777215).toString(16)};
+                    content: "${'x'.repeat(2000)}"; /* Additional 2KB */
                 }
                 @keyframes anim-${i} {
                     0% { transform: rotate(0deg); }
@@ -1969,21 +2022,22 @@
             const stringSizeKB = stringCache.reduce((sum, cached) => sum + (cached.data.length / 1024), 0);
             
             const objectCount = objectCache.length;
-            const objectSizeKB = objectCount * 1000; // 50% reduction: rough estimate per complex object
+            const objectSizeKB = objectCount * 1000; // 1MB per complex object
             
             const domCount = domCache.length;
-            const domSizeKB = domCount * 400; // 50% reduction: rough estimate per DOM container
+            const domSizeKB = domCount * 1000; // 1MB per DOM container
             
             const totalSizeKB = imageSizeKB + stringSizeKB + objectSizeKB + domSizeKB;
             const totalSizeMB = (totalSizeKB / 1024).toFixed(1);
             
-            statusEl.textContent = `Memory: ${totalSizeMB}MB | Images: ${totalImages} | Strings: ${stringCount} | Objects: ${objectCount} | DOM: ${domCount}`;
+            statusEl.textContent = `Memory: ${totalSizeMB}MB / 100MB | Images: ${totalImages} | Strings: ${stringCount} | Objects: ${objectCount} | DOM: ${domCount}`;
             
-            // Change color based on memory usage (more aggressive thresholds)
-            if (totalSizeMB > 200) {
-                statusEl.style.background = '#dc3545'; // Red for very high memory
+            // Change color based on memory usage with 100MB cap
+            if (totalSizeMB >= 100) {
+                statusEl.style.background = '#dc3545'; // Red for capped memory
                 statusEl.style.color = 'white';
-            } else if (totalSizeMB > 100) {
+                statusEl.textContent += ' | CAPPED';
+            } else if (totalSizeMB > 75) {
                 statusEl.style.background = '#fd7e14'; // Orange for high memory
                 statusEl.style.color = 'white';
             } else if (totalSizeMB > 50) {
